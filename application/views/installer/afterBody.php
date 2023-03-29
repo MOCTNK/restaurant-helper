@@ -1,0 +1,1 @@
+<script type="module" src="/public/scripts/installer/installer.js"></script>

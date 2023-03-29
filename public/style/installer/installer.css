@@ -1,0 +1,40 @@
+@import url('/public/style/main.css');
+
+.installer {
+    width: 700px;
+    height: 100%;
+    background-color: white;
+    position: absolute;
+    left: 50%;
+    margin-left: -350px;
+}
+
+.installer_info {
+    width: calc(170px - 20px);
+    height: calc(100% - 20px);
+    background-color: #4682B4;
+    display: inline-block;
+    position: absolute;
+    padding: 10px;
+}
+
+.installer_space {
+    width: calc(100% - 270px);
+    height: calc(100% - 40px);
+    display: inline-block;
+    position: absolute;
+    margin-left: 170px;
+    padding: 20px 50px 20px 50px;
+    overflow-y: auto;
+}
+
+.installer_title {
+    width: calc(100% - 20px);
+    color: #4682B4;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.installer_item {
+    width: calc(100% - 20px);
+}

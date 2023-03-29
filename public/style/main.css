@@ -1,0 +1,96 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', serif;
+    background-color: #e6e8ff;
+    color: #313131;
+}
+
+input {
+    width: calc(100% - 20px);
+    height: 40px;
+    border: 0;
+    border-bottom: 4px solid #4682B4;
+    padding: 0 10px 0 10px;
+    outline: none;
+    font-size: 16px;
+    color: #313131;
+}
+
+button {
+    height: 40px;
+    border: 0;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #4682B4;
+    cursor: pointer;
+    margin: 20px 0 20px 0;
+    padding: 10px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+ul {
+    padding-inline-start: 24px;
+}
+
+li {
+    padding: 5px 0 5px 0;
+}
+
+.title {
+    width: calc(100% - 20px);
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.label {
+
+}
+
+.custom-form {
+    width: 400px;
+    background-color: white;
+    padding: 40px 40px 40px 40px;
+}
+
+.custom-form_label {
+    width: 100%;
+}
+
+.custom-form_title {
+    width: 100%;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+    margin: 20px 0 20px 0;
+}
+
+.custom-form_field {
+    margin-top: 25px;
+}
+
+.messages-box {
+    width: 300px;
+    height: 100%;
+    position: fixed;
+    z-index: 1000;
+    right: 0;
+    padding: 10px 20px 0 20px;
+    overflow: hidden;
+}
+
+.message {
+    width: calc(100% - 40px);
+    background-color: #f0aaaa;
+    padding: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+}
