@@ -2,13 +2,13 @@
 
 return [
     'all'=> [
-
+        'setup'
     ],
     'authorize'=> [
 
     ],
     'guest'=> [
-        'setup'
+
     ],
     'admin'=> [
 

@@ -1,1 +1,13 @@
 @import url('/public/style/main.css');
+
+.custom-form {
+    width: 400px;
+    height: 300px;
+    background-color: white;
+    padding: 40px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -240px;
+    margin-top: -190px;
+}

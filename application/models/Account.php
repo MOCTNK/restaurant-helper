@@ -10,6 +10,36 @@ class Account extends Model
         $this->connect();
     }
 
+    public function login($post) {
+        $result = array();
+        if($post['action'] == "login") {
+            if(isset($post['form']['login']) && $post['form']['login'] != null
+             && isset($post['form']['password']) && $post['form']['password'] != null) {
+                $login = $post['form']['login'];
+                $password = $post['form']['password'];
+                if($this->existUser($login, $password)) {
+                    $id_user = $this->getUserId($login, $password);
+                    $token = $this->createToken($login, $password);
+                    $this->setToken($id_user, $token);
+                    $this->setSession($token);
+                    $result['message'] = $_SESSION['admin'];
+                    $result['success'] = true;
+                } else {
+                    $result['message'] = "Неправильно введен логин или пароль!";
+                    $result['success'] = false;
+                }
+            } else {
+                $result['message'] = "Заполнены не все поля!";
+                $result['success'] = false;
+            }
+        }
+        exit(json_encode($result));
+    }
+
+
+    public function createToken($login, $password) {
+        return SHA1(md5($login.date("Y-m-d H:i:s").$password));
+    }
     public function createUser($name, $surname, $patronymic) {
         $sql = "INSERT INTO users (name, surname, patronymic, date) VALUES (:name, :surname, :patronymic, :date);";
         $params = [
@@ -65,6 +95,37 @@ class Account extends Model
         $params = [
             'login' => $login
         ];
-        return $this->db->rowCount($sql, $params) > 0;
+        return $this->db->rowCount($sql, $params) == 1;
+    }
+
+    public function existUser($login, $password) {
+        $sql = "SELECT id FROM accounts WHERE login = :login AND password = :password;";
+        $params = [
+            'login' => $login,
+            'password' => SHA1($password)
+        ];
+        return $this->db->rowCount($sql, $params) == 1;
+    }
+
+    public function getUserId($login, $password) {
+        $sql = "SELECT id FROM accounts WHERE login = :login AND password = :password;";
+        $params = [
+            'login' => $login,
+            'password' => SHA1($password)
+        ];
+        return $this->db->queryFetch($sql, $params)[0]['id'];
+    }
+
+    public function setToken($id_user, $token) {
+        $sql = "UPDATE accounts SET token = :token WHERE id_user = :id_user;";
+        $params = [
+            'id_user' => $id_user,
+            'token' => $token
+        ];
+        $this->db->query($sql, $params);
+    }
+
+    public function setSession($token) {
+        $_SESSION['admin'] = $token;
     }
 }

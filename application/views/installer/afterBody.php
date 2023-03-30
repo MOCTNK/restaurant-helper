@@ -1,1 +1,1 @@
-<script type="module" src="/public/scripts/installer/installer.js"></script>
+<script type="module" src="/public/scripts/installer/setup.js"></script>

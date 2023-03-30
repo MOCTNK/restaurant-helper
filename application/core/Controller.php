@@ -28,12 +28,13 @@ abstract class Controller
     }
 
     public function checkAcl() {
+        session_start();
         $this->acl = require 'application/acl/'.$this->route['controller'].'.php';
         if($this->isAcl('all')) {
             return true;
         } elseif (isset($_SESSION['authorize']) && $this->isAcl('authorize')) {
             return true;
-        } elseif (!isset($_SESSION['guest']) && $this->isAcl('guest')) {
+        } elseif (!isset($_SESSION['authorize']) && !isset($_SESSION['admin'])  && $this->isAcl('guest')) {
             return true;
         } elseif (isset($_SESSION['admin']) && $this->isAcl('admin')) {
             return true;

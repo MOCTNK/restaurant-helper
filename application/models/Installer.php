@@ -79,7 +79,9 @@ class Installer extends Model
     private function checkFormDB($post) {
     	$result = array();
     	if($post['action'] == 'formBD') {
-            if(isset($post['form']['db_host']) && $post['form']['db_host'] != null && isset($post['form']['db_user']) && $post['form']['db_user'] != null && isset($post['form']['db_password']) && $post['form']['db_password'] != null) {
+            if(isset($post['form']['db_host']) && $post['form']['db_host'] != null
+                && isset($post['form']['db_user']) && $post['form']['db_user'] != null
+                && isset($post['form']['db_password']) && $post['form']['db_password'] != null) {
                 try{  
                     $this->link = new PDO('mysql:host='.$post['form']['db_host'], $post['form']['db_user'], $post['form']['db_password']);
                     $this->settings['db']['host'] = $post['form']['db_host'];
