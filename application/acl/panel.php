@@ -2,15 +2,16 @@
 
 return [
     'all'=> [
-        'logout'
+
     ],
     'authorize'=> [
-
+        'employee'
     ],
     'guest'=> [
-        'login'
+
     ],
     'admin'=> [
-
+        'employee',
+        'admin'
     ],
 ];

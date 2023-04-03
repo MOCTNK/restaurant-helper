@@ -5,12 +5,16 @@ CREATE TABLE restaurant_helper.users(
     name VARCHAR(50),
     surname VARCHAR(50),
     patronymic VARCHAR(50),
-    date DATETIME
+    date DATETIME,
+    date_of_birth DATE,
+    avatar VARCHAR(50)
 );
 
 CREATE TABLE restaurant_helper.positions(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255)
+    code_name VARCHAR(255),
+    name VARCHAR(255),
+    is_admin TINYINT
 );
 
 CREATE TABLE restaurant_helper.user_position(
@@ -31,6 +35,6 @@ CREATE TABLE restaurant_helper.accounts(
     FOREIGN KEY (id_user) REFERENCES restaurant_helper.users (id)
 );
 
-INSERT INTO restaurant_helper.positions (name) VALUES
-('Главный админ'),
-('Админ');
+INSERT INTO restaurant_helper.positions (code_name, name, is_admin) VALUES
+('head_admin','Главный админ', 1),
+('admin', 'Админ', 1);

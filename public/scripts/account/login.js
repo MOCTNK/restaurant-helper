@@ -10,7 +10,7 @@ function login(dataClient) {
         success: function(result) {
             console.log(result);
             if(result.success) {
-                window.location.replace("/");
+                window.location.replace("/panel/employee");
             } else {
                 message(result.message);
             }

@@ -36,8 +36,11 @@ class Loader
 
     public static function checkDB() {
         $result = false;
-        if(Loader::getSettings()['db']['db_name'] === "") {
+        $settings = Loader::getSettings();
+        if($settings['db']['db_name'] === "") {
             return $result;
+            //$settings['db']['db_name'] = "restaurant_helper";
+            //Loader::setSettings($settings);
         }
         try {
             $db = new DataBase();
@@ -50,7 +53,9 @@ class Loader
 
     public static function checkHeadAdmin() {
         $db = new DataBase();
-        $sql = "SELECT id_user FROM user_position WHERE id_position = 1;";
+        $sql = "SELECT user_position.id_user FROM user_position"
+            ." JOIN positions ON positions.id = user_position.id_position"
+            ." WHERE positions.code_name = 'head_admin';";
         $rowCount = $db->rowCount($sql);
         return $rowCount > 0;
     }

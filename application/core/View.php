@@ -38,6 +38,13 @@ class View
         }
     }
 
+    public function getView($path, $vars = []) {
+        extract($vars);
+        ob_start();
+        require 'application/views/'.$path;
+        return ob_get_clean();
+    }
+
     public static function redirect($url) {
         header('location: '.$url);
     }
