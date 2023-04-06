@@ -15,5 +15,6 @@ class Test extends Model
         $sql = "DROP DATABASE restaurant_helper;";
         $this->db->query($sql);
         file_put_contents('application/config/settings.json', '');
+        session_destroy();
     }
 }

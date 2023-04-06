@@ -134,6 +134,7 @@ class Installer extends Model
             if(isset($post['form']['admin_name']) && $post['form']['admin_name'] != null
                 && isset($post['form']['admin_surname']) && $post['form']['admin_surname'] != null
                 && isset($post['form']['admin_patronymic']) && $post['form']['admin_patronymic'] != null
+                && isset($post['form']['admin_date_of_birth']) && $post['form']['admin_date_of_birth'] != null
                 && isset($post['form']['admin_login']) && $post['form']['admin_login'] != null
                 && isset($post['form']['admin_password']) && $post['form']['admin_password'] != null
                 && isset($post['form']['admin_password_repeat']) && $post['form']['admin_password_repeat'] != null
@@ -141,8 +142,13 @@ class Installer extends Model
                 $account = new Account();
                 if($account->checkPassword($post['form']['admin_password'], $post['form']['admin_password_repeat'])) {
                     if(!$account->existLogin($post['form']['admin_login'])) {
-                        $id_user = $account->createUser($post['form']['admin_name'], $post['form']['admin_surname'], $post['form']['admin_patronymic']);
-                        $id_account = $account->createAccountByUser($id_user, $post['form']['admin_login'], $post['form']['admin_password']);
+                        $id_user = $account->createUser(
+                            $post['form']['admin_name'],
+                            $post['form']['admin_surname'],
+                            $post['form']['admin_patronymic'],
+                            $post['form']['admin_date_of_birth']
+                        );
+                        $id_account = $account->createAccount($id_user, $post['form']['admin_login'], $post['form']['admin_password']);
                         $sql = "INSERT INTO user_position (id_user, id_position) VALUES (:id_user, :id_position);";
                         $params = [
                             'id_user' => $id_user,

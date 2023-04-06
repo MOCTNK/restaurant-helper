@@ -14,6 +14,10 @@
         <div class="custom-form_label">Введите отчество сотрудника</div>
         <input placeholder="Отчество" name="admin_patronymic"/>
     </p>
+    <p class="custom-form_field">
+        <div class="custom-form_label">Введите дату рождения сотрудника</div>
+        <input type="date" name="admin_date_of_birth"/>
+    </p>
 	<p class="custom-form_field">
 		<div class="custom-form_label">Введите логин</div>
 		<input placeholder="Логин" name="admin_login"/>

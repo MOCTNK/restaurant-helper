@@ -36,20 +36,23 @@ class Account extends Model
         exit(json_encode($result));
     }
 
-    public function logout() {
+    public function logoutc() {
         session_destroy();
     }
 
     public function createToken($login, $password) {
         return SHA1(md5($login.date("Y-m-d H:i:s").$password));
     }
-    public function createUser($name, $surname, $patronymic) {
-        $sql = "INSERT INTO users (name, surname, patronymic, date) VALUES (:name, :surname, :patronymic, :date);";
+    public function createUser($name, $surname, $patronymic, $date_of_birth, $avatar = 'avatar_default.png') {
+        $sql = "INSERT INTO users (name, surname, patronymic, date, date_of_birth, avatar)".
+            " VALUES (:name, :surname, :patronymic, :date, :date_of_birth, :avatar);";
         $params = [
             'name' => $name,
             'surname' => $surname,
             'patronymic' => $patronymic,
-            'date' => date("Y-m-d H:i:s")
+            'date' => date("Y-m-d H:i:s"),
+            'date_of_birth' => $date_of_birth,
+            'avatar' => $avatar
         ];
         $this->db->query($sql, $params);
 
@@ -58,7 +61,7 @@ class Account extends Model
         return $this->db->queryFetch($sql, $params)[0]['id'];
     }
 
-    public function createAccountByUser($id_user, $login, $password) {
+    public function createAccount($id_user, $login, $password) {
         $sql = "INSERT INTO accounts (id_user, login, password, date) VALUES (:id_user, :login, :password, :date);";
         $params = [
             'id_user' => $id_user,
@@ -68,23 +71,7 @@ class Account extends Model
         ];
         $this->db->query($sql, $params);
 
-        $sql = "SELECT id FROM accounts WHERE id_user = :id_user ORDER BY date DESC LIMIT 1;";
-        $params = array_slice($params, 0, 1);
-        return $this->db->queryFetch($sql, $params)[0]['id'];
-    }
-
-    public function createAccount($name, $surname, $patronymic, $login, $password) {
-        $id_user = $this->createUser($name, $surname, $patronymic);
-        $sql = "INSERT INTO accounts (id_user, login, password, date) VALUES (:id_user, :login, :password, :date);";
-        $params = [
-            'id_user' => $id_user,
-            'login' => $login,
-            'password' => SHA1($password),
-            'date' => date("Y-m-d H:i:s")
-        ];
-        $this->db->query($sql, $params);
-
-        $sql = "SELECT id FROM accounts WHERE id_user = :id_user ORDER BY date DESC LIMIT 1;";
+        $sql = "SELECT id FROM accounts WHERE id_user = :id_user LIMIT 1;";
         $params = array_slice($params, 0, 1);
         return $this->db->queryFetch($sql, $params)[0]['id'];
     }

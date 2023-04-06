@@ -12,6 +12,7 @@ class PanelController extends Controller
     private $account;
     private $accountData;
     private $panel;
+    private $adminPanel;
     public function __construct($route)
     {
         parent::__construct($route);
@@ -42,9 +43,48 @@ class PanelController extends Controller
     }
 
     public function adminAction() {
+        View::redirect('/panel/admin/restaurants');
+        $this->adminPanel = $this->view->getView('panel/admin/panel.php');
         $vars = [
-            'panel' => $this->panel
+            'panel' => $this->panel,
+            'adminPanel' => $this->adminPanel,
         ];
         $this->view->render('Панель администратора', $vars);
+    }
+
+    public function restaurantsAction() {
+        $this->view->path = '/panel/admin/restaurants';
+        $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
+            'action' => $this->model->getAdminAction()
+        ]);
+        $vars = [
+            'panel' => $this->panel,
+            'adminPanel' => $this->adminPanel,
+        ];
+        $this->view->render('Менеджер ресторанов', $vars);
+    }
+
+    public function addRestaurantAction() {
+        $this->view->path = '/panel/admin/addRestaurant';
+        $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
+            'action' => $this->model->getAdminAction()
+        ]);
+        $vars = [
+            'panel' => $this->panel,
+            'adminPanel' => $this->adminPanel,
+        ];
+        $this->view->render('Добавление ресторана', $vars);
+    }
+
+    public function modulesAction() {
+        $this->view->path = '/panel/admin/modules';
+        $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
+            'action' => $this->model->getAdminAction()
+        ]);
+        $vars = [
+            'panel' => $this->panel,
+            'adminPanel' => $this->adminPanel,
+        ];
+        $this->view->render('Менеджер модулей', $vars);
     }
 }

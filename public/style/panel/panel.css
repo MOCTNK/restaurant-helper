@@ -1,9 +1,18 @@
 @import url('/public/style/main.css');
 
+html, body {
+    height: 100%;
+}
+
 .panel {
     width: 100%;
     height: 40px;
     background-color: #4682B4;
+}
+
+.panel_container {
+    width: 100%;
+    height: calc(100% - 40px);
 }
 
 .panel_menu {
@@ -35,11 +44,6 @@
     color: white;
 }
 
-.panel_container {
-    width: 100%;
-    height: 100%;
-}
-
 .employee_container {
     width: 900px;
     height: 30px;
@@ -59,6 +63,8 @@
     position: absolute;
     border-radius: 50%;
     margin-left: 50px;
+    background-size: 200px 200px;
+    background-repeat: no-repeat;
 }
 
 .employee_info {
@@ -76,4 +82,92 @@
 
 .employee_label_title {
     font-weight: bold;
+}
+
+.admin_panel {
+    width: 100%;
+    height: 40px;
+    background-color: white;
+    padding: 10px 0 10px 0;
+}
+
+.admin_panel_button {
+    color: #313131;
+    height: 40px;
+    line-height: 40px;
+    float: left;
+    cursor: pointer;
+    margin-left: 20px;
+    padding: 0 10px 0 10px;
+    border-radius: 5px;
+}
+
+.admin_panel_button_grey {
+    background-color: #e6e8ff;
+}
+
+.admin_panel_button:hover {
+    background-color: #e6e8ff;
+}
+
+.admin_container {
+    width: 100%;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+}
+
+.restaurant_list {
+    width: 100%;
+    height: 100%;
+}
+
+.restaurant_card {
+    width: 250px;
+    height: 300px;
+    background-color: white;
+    border-radius: 5px;
+    float: left;
+    margin: 20px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.restaurant_card:hover {
+    opacity: 0.8;
+}
+
+.restaurant_logo {
+    width: 200px;
+    height: 200px;
+    background-size: 200px 200px;
+    background-repeat: no-repeat;
+    margin-top: 25px;
+    margin-left: 25px;
+    border-radius: 50%;
+}
+
+.restaurant_label {
+    width: 100%;
+    text-align: center;
+    margin-top: 25px;
+    font-size: 20px;
+    color: #313131;
+}
+
+.restaurant_info {
+    width: calc(40% - 120px);
+    height: calc(100% - 120px);
+    background-color: white;
+    margin: 20px 0 0 20px;
+    padding: 40px;
+    float: left;
+}
+
+.restaurant_modules-list {
+    width: calc(60% - 100px);
+    height: calc(100% - 120px);
+    background-color: white;
+    margin: 20px 0 0 20px;
+    padding: 40px;
+    float: left;
 }

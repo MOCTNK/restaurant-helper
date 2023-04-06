@@ -17,4 +17,8 @@ class Panel extends Model
     public function getAction() {
         return explode('/', trim($_SERVER['REQUEST_URI'], '/'))[1];
     }
+
+    public function getAdminAction() {
+        return explode('/', trim($_SERVER['REQUEST_URI'], '/'))[2];
+    }
 }

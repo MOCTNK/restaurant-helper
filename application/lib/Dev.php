@@ -9,3 +9,8 @@ function debug($str) {
     echo '</pre>';
     exit;
 }
+
+function sqlToDate($date) {
+    $result = explode('-',$date);
+    return $result[2].".".$result[1].".".$result[0];
+}

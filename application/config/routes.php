@@ -25,6 +25,18 @@ return [
         'controller' => 'panel',
         'action' => 'admin'
     ],
+    'panel/admin/restaurants' => [
+        'controller' => 'panel',
+        'action' => 'restaurants'
+    ],
+    'panel/admin/restaurants/add' => [
+        'controller' => 'panel',
+        'action' => 'addRestaurant'
+    ],
+    'panel/admin/modules' => [
+        'controller' => 'panel',
+        'action' => 'modules'
+    ],
     'test' => [
         'controller' => 'test',
         'action' => 'index'

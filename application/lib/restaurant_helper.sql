@@ -2,36 +2,36 @@ CREATE DATABASE restaurant_helper;
 
 CREATE TABLE restaurant_helper.users(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(50),
-    surname VARCHAR(50),
-    patronymic VARCHAR(50),
-    date DATETIME,
-    date_of_birth DATE,
-    avatar VARCHAR(50)
+    name VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
+    patronymic VARCHAR(50) NOT NULL,
+    date DATETIME NOT NULL,
+    date_of_birth DATE NOT NULL,
+    avatar VARCHAR(50) DEFAULT 'avatar_default.png'
 );
 
 CREATE TABLE restaurant_helper.positions(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    code_name VARCHAR(255),
-    name VARCHAR(255),
-    is_admin TINYINT
+    code_name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    is_admin TINYINT NOT NULL
 );
 
 CREATE TABLE restaurant_helper.user_position(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    id_user INT,
-    id_position INT,
+    id_user INT NOT NULL,
+    id_position INT NOT NULL,
     FOREIGN KEY (id_user) REFERENCES restaurant_helper.users (id),
     FOREIGN KEY (id_position) REFERENCES restaurant_helper.positions (id)
 );
 
 CREATE TABLE restaurant_helper.accounts(
     id INT PRIMARY KEY AUTO_INCREMENT,
-    id_user INT,
-    login VARCHAR(50),
-    password VARCHAR(50),
+    id_user INT NOT NULL,
+    login VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL,
     token VARCHAR(50),
-    date DATETIME,
+    date DATETIME NOT NULL,
     FOREIGN KEY (id_user) REFERENCES restaurant_helper.users (id)
 );
 

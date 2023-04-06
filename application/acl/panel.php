@@ -12,6 +12,9 @@ return [
     ],
     'admin'=> [
         'employee',
-        'admin'
+        'admin',
+        'restaurants',
+        'addRestaurant',
+        'modules'
     ],
 ];
