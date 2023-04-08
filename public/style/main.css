@@ -102,3 +102,9 @@ textarea {
     margin-top: 10px;
     cursor: pointer;
 }
+
+.star:after {
+    content: '*';
+    color: red;
+    margin-left: 5px;
+}

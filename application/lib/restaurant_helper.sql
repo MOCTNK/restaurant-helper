@@ -35,6 +35,14 @@ CREATE TABLE restaurant_helper.accounts(
     FOREIGN KEY (id_user) REFERENCES restaurant_helper.users (id)
 );
 
+CREATE TABLE restaurant_helper.restaurants(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    address VARCHAR(255),
+    about VARCHAR(255),
+    logo VARCHAR(50) DEFAULT 'logo_default.png'
+);
+
 INSERT INTO restaurant_helper.positions (code_name, name, is_admin) VALUES
 ('head_admin','Главный админ', 1),
 ('admin', 'Админ', 1);

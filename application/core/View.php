@@ -13,24 +13,26 @@ class View
     public function __construct($route) {
         $this->route = $route;
         $this->path = $route['controller'].'/'.$route['action'];
-        $this->pathHead = 'application/views/'.$this->route['controller'].'/head.php';
-        $this->pathAfterBody = 'application/views/'.$this->route['controller'].'/afterBody.php';
+        $this->pathHead = $this->route['controller'];
+        $this->pathAfterBody = $this->route['controller'];
     }
 
     public function render($title = "", $vars = []) {
         extract($vars);
         $path = 'application/views/'.$this->path.'.php';
+        $pathHead = 'application/views/'.$this->pathHead.'/head.php';
+        $pathAfterBody = 'application/views/'.$this->pathAfterBody.'/afterBody.php';
         if(file_exists($path)) {
             ob_start();
             require $path;
             $content = ob_get_clean();
             $head = '';
             $afterBody = '';
-            if(file_exists($this->pathHead)) {
-                $head = file_get_contents($this->pathHead);
+            if(file_exists($pathHead)) {
+                $head = file_get_contents($pathHead);
             }
-            if(file_exists($this->pathAfterBody)) {
-                $afterBody = file_get_contents($this->pathAfterBody);
+            if(file_exists($pathAfterBody)) {
+                $afterBody = file_get_contents($pathAfterBody);
             }
             require 'application/views/layouts/'.$this->layout.'.php';
         } else {

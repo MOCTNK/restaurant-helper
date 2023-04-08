@@ -36,7 +36,7 @@ class Account extends Model
         exit(json_encode($result));
     }
 
-    public function logoutc() {
+    public function logout() {
         session_destroy();
     }
 

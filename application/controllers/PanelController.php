@@ -60,21 +60,30 @@ class PanelController extends Controller
         $vars = [
             'panel' => $this->panel,
             'adminPanel' => $this->adminPanel,
+            'restaurantsList' =>$this->model->getRestaurantsList()
         ];
         $this->view->render('Менеджер ресторанов', $vars);
     }
 
     public function addRestaurantAction() {
-        $this->view->path = '/panel/admin/addRestaurant';
-        $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-            'action' => $this->model->getAdminAction()
-        ]);
-        $vars = [
-            'panel' => $this->panel,
-            'adminPanel' => $this->adminPanel,
-        ];
-        $this->view->render('Добавление ресторана', $vars);
+        if(!empty($_POST)) {
+            if(isset($_POST['action']) && $_POST['action'] == "addRestaurant") {
+                $this->model->addRestaurant($_POST);
+            }
+        } else {
+            $this->view->path = '/panel/admin/restaurants/addRestaurant';
+            $this->view->pathAfterBody = '/panel/admin/restaurants/addRestaurant';
+            $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
+                'action' => $this->model->getAdminAction()
+            ]);
+            $vars = [
+                'panel' => $this->panel,
+                'adminPanel' => $this->adminPanel,
+            ];
+            $this->view->render('Добавление ресторана', $vars);
+        }
     }
+
 
     public function modulesAction() {
         $this->view->path = '/panel/admin/modules';

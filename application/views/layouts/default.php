@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <title><?= $title?></title>
+    <link rel="shortcut icon" href="/public/resources/favicon.ico" type="image/x-icon">
     <?= $head?>
 </head>
 <body>

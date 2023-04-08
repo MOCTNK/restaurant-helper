@@ -6,7 +6,7 @@
             <form id="form_add_restaurant">
                 <p><div class="title">Добавление ресторана</div></p>
                 <p class="custom-form_field">
-                    <div class="custom-form_label">Введите название ресторана</div>
+                    <div class="custom-form_label star">Введите название ресторана</div>
                     <input placeholder="Название" name="name"/>
                 </p>
                 <p class="custom-form_field">
