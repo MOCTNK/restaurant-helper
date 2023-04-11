@@ -15,6 +15,7 @@ return [
         'admin',
         'restaurants',
         'addRestaurant',
+        'infoRestaurant',
         'modules'
     ],
 ];

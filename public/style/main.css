@@ -93,6 +93,7 @@ textarea {
     right: 0;
     padding: 10px 20px 0 20px;
     overflow: hidden;
+    visibility: hidden;
 }
 
 .message {
@@ -107,4 +108,8 @@ textarea {
     content: '*';
     color: red;
     margin-left: 5px;
+}
+
+a {
+    text-decoration: none;
 }

@@ -17,23 +17,27 @@ return [
         'controller' => 'account',
         'action' => 'logout'
     ],
-    'panel/employee' => [
+    'panel/{panel:employee}' => [
         'controller' => 'panel',
         'action' => 'employee'
     ],
-    'panel/admin' => [
+    'panel/{panel:admin}' => [
         'controller' => 'panel',
         'action' => 'admin'
     ],
-    'panel/admin/restaurants' => [
+    'panel/{panel:admin}/{actionpanel:restaurants}' => [
         'controller' => 'panel',
         'action' => 'restaurants'
     ],
-    'panel/admin/restaurants/add' => [
+    'panel/{panel:admin}/{actionpanel:restaurants}/add' => [
         'controller' => 'panel',
         'action' => 'addRestaurant'
     ],
-    'panel/admin/modules' => [
+    'panel/{panel:admin}/{actionpanel:restaurants}/{id:\d+}' => [
+        'controller' => 'panel',
+        'action' => 'infoRestaurant'
+    ],
+    'panel/{panel:admin}/{actionpanel:modules}' => [
         'controller' => 'panel',
         'action' => 'modules'
     ],

@@ -171,3 +171,37 @@ html, body {
     padding: 40px;
     float: left;
 }
+
+.menu {
+    width: 250px;
+    height: calc(100% - 40px);
+    background-color: white;
+    float: left;
+    margin: 20px 0 0 20px;
+}
+
+.menu_item {
+    width: calc(100% - 20px);
+    padding: 10px;
+    cursor: pointer;
+}
+
+.menu_item_selected {
+    background-color: #4682B4;
+    color: white;
+}
+
+.menu_item:hover {
+    background-color: #4682B4;
+    color: white;
+}
+
+.container {
+    width: calc(100% - 350px);
+    height: calc(100% - 80px);
+    background-color: white;
+    float: left;
+    margin: 20px 0 0 20px;
+    overflow-y: auto;
+    padding: 20px;
+}

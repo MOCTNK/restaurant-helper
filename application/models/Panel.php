@@ -35,15 +35,24 @@ class Panel extends Model
         return $this->db->queryFetch($sql);
     }
 
+    public function existRestaurant($id) {
+        $sql = "SELECT id FROM restaurants WHERE id = :id;";
+        $params = [
+            'id' => $id
+        ];
+        return $this->db->rowCount($sql, $params) == 1;
+    }
+
+    public function getRestaurantById($id) {
+        $sql = "SELECT * FROM restaurants WHERE id = :id;";
+        $params = [
+            'id' => $id
+        ];
+        return $this->db->queryFetch($sql, $params)[0];
+    }
+
     public function getUserName($account) {
         return $account['surname']." ".$account['name']." ".$account['patronymic'];
     }
 
-    public function getAction() {
-        return explode('/', trim($_SERVER['REQUEST_URI'], '/'))[1];
-    }
-
-    public function getAdminAction() {
-        return explode('/', trim($_SERVER['REQUEST_URI'], '/'))[2];
-    }
 }

@@ -10,7 +10,7 @@
                 </div>
             </a>
             <? for($i = 0; $i < count($restaurantsList); $i++):?>
-                <a href="/panel/admin/restaurants/add">
+                <a href="/panel/admin/restaurants/<?= $restaurantsList[$i]['id']?>">
                     <div class="restaurant_card">
                         <div class="restaurant_logo" style="background-image: url(/public/resources/restaurant/<?= $restaurantsList[$i]['logo']?>);"></div>
                         <div class="restaurant_label"><?= $restaurantsList[$i]['name']?></div>
