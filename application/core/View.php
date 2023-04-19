@@ -47,6 +47,13 @@ class View
         return ob_get_clean();
     }
 
+    public function getViewModule($path, $vars = []) {
+        extract($vars);
+        ob_start();
+        require 'application/modules/'.$path;
+        return ob_get_clean();
+    }
+
     public static function redirect($url) {
         header('location: '.$url);
     }

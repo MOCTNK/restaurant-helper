@@ -16,6 +16,7 @@ return [
         'restaurants',
         'addRestaurant',
         'infoRestaurant',
+        'actionRestaurant',
         'modules'
     ],
 ];

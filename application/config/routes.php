@@ -37,6 +37,10 @@ return [
         'controller' => 'panel',
         'action' => 'infoRestaurant'
     ],
+    'panel/{panel:admin}/{actionpanel:restaurants}/{id:\d+}/action/{idaction:\d+}' => [
+        'controller' => 'panel',
+        'action' => 'actionRestaurant'
+    ],
     'panel/{panel:admin}/{actionpanel:modules}' => [
         'controller' => 'panel',
         'action' => 'modules'

@@ -14,6 +14,6 @@ class AdministratorModule extends Module
     public function init()
     {
         parent::init();
-        $this->addMenuItemAdmin('Должности', 'positions');
+        $this->addMenuItemAdmin('Сотрудники', 'employees');
     }
 }

@@ -75,6 +75,14 @@ class Panel extends Model
         return $this->db->queryFetch($sql);
     }
 
+    public function getModule($id) {
+        $sql = "SELECT * FROM modules WHERE id = :id;";
+        $params = [
+            'id' => $id
+        ];
+        return $this->db->queryFetch($sql, $params)[0];
+    }
+
     public function getModulesListDir() {
         $result = array();
         $moduleList = $this->getModulesList();
@@ -99,6 +107,19 @@ class Panel extends Model
             }
         }
         return $result;
+    }
+
+    public function getMenuAdmin() {
+        $sql = "SELECT * FROM menu_admin;";
+        return $this->db->queryFetch($sql);
+    }
+
+    public function getMenuAdminById($id) {
+        $sql = "SELECT * FROM menu_admin WHERE id = :id;";
+        $params = [
+            'id' => $id
+        ];
+        return $this->db->queryFetch($sql, $params)[0];
     }
 
     public function getUserName($account) {
