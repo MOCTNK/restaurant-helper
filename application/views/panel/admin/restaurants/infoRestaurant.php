@@ -3,9 +3,7 @@
     <?= $adminPanel?>
     <div class="admin_container">
         <div class="menu">
-            <a href="/panel/admin/restaurants/<?= $restaurantsData['id']?>">
-                <div class="menu_item menu_item_selected">Ресторан</div>
-            </a>
+            <?= $menuAdmin?>
         </div>
         <div class="container">
             <div style="width: 300px; height: 100%; float: left;">

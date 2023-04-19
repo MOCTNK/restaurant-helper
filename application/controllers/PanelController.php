@@ -95,21 +95,42 @@ class PanelController extends Controller
         $vars = [
             'panel' => $this->panel,
             'adminPanel' => $this->adminPanel,
-            'restaurantsData' => $this->model->getRestaurantById($this->route['id'])
+            'restaurantsData' => $this->model->getRestaurantById($this->route['id']),
+            'menuAdmin' => $this->view->getView('panel/admin/restaurants/menuAdmin.php',[
+                'idRestaurant' => $this->route['id']
+            ])
         ];
         $this->view->render('Ресторан', $vars);
     }
 
 
     public function modulesAction() {
-        $this->view->path = '/panel/admin/modules';
-        $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-            'action' => $this->route['actionpanel']
-        ]);
-        $vars = [
-            'panel' => $this->panel,
-            'adminPanel' => $this->adminPanel,
-        ];
-        $this->view->render('Менеджер модулей', $vars);
+        if(!empty($_POST)) {
+            if(isset($_POST['action']) && $_POST['action'] == "getModuleList") {
+                $list = $this->model->getModulesListDir();
+                $this->model->getModulesListAction(
+                    $_POST,
+                    $list,
+                    $this->view->getView('panel/admin/modules/moduleList.php', ['modulesList' => $list])
+                );
+            }
+            if(isset($_POST['action']) && $_POST['action'] == "initModule") {
+                $this->model->initModule($_POST);
+            }
+        } else {
+            $this->view->path = '/panel/admin/modules';
+            $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
+                'action' => $this->route['actionpanel']
+            ]);
+            $this->view->pathAfterBody = '/panel/admin/modules';
+            //debug($this->model->getModulesListDir());
+            $vars = [
+                'panel' => $this->panel,
+                'adminPanel' => $this->adminPanel,
+                'modulePanel' => $this->view->getView('panel/admin/modules/panel.php'),
+                'modulesList' => $this->model->getModulesListDir()
+            ];
+            $this->view->render('Менеджер модулей', $vars);
+        }
     }
 }

@@ -43,6 +43,43 @@ CREATE TABLE restaurant_helper.restaurants(
     logo VARCHAR(50) DEFAULT 'logo_default.png'
 );
 
+CREATE TABLE restaurant_helper.restaurant_employees(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_restaurant INT NOT NULL,
+    id_user_position INT NOT NULL,
+    FOREIGN KEY (id_restaurant) REFERENCES restaurant_helper.restaurants (id),
+    FOREIGN KEY (id_user_position) REFERENCES restaurant_helper.user_position (id)
+);
+
+CREATE TABLE restaurant_helper.modules (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE restaurant_helper.module_position(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_position INT NOT NULL,
+    id_module INT NOT NULL,
+    FOREIGN KEY (id_position) REFERENCES restaurant_helper.positions (id),
+    FOREIGN KEY (id_module) REFERENCES restaurant_helper.modules (id)
+);
+
+CREATE TABLE restaurant_helper.menu_admin (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_module INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_module) REFERENCES restaurant_helper.modules (id)
+);
+
+CREATE TABLE restaurant_helper.menu_employee (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_module INT NOT NULL,
+    ame VARCHAR(255) NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_module) REFERENCES restaurant_helper.modules (id)
+);
+
 INSERT INTO restaurant_helper.positions (code_name, name, is_admin) VALUES
 ('head_admin','Главный админ', 1),
 ('admin', 'Админ', 1);
