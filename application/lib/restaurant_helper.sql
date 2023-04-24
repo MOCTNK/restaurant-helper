@@ -75,7 +75,7 @@ CREATE TABLE restaurant_helper.menu_admin (
 CREATE TABLE restaurant_helper.menu_employee (
     id INT PRIMARY KEY AUTO_INCREMENT,
     id_module INT NOT NULL,
-    ame VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     action VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_module) REFERENCES restaurant_helper.modules (id)
 );

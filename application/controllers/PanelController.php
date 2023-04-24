@@ -34,6 +34,7 @@ class PanelController extends Controller
     }
 
     public function employeeAction() {
+        //debug($this->model->getMenuItemEmployee());
         $vars = [
             'panel' => $this->panel,
             'account' => $this->accountData,
@@ -108,12 +109,17 @@ class PanelController extends Controller
         if(!$this->model->existRestaurant($this->route['id'])) {
             View::errorCode(404);
         }
+        if(!$this->model->existActionRestaurant($this->route['idaction'])) {
+            View::errorCode(404);
+        }
         $this->view->path = '/panel/admin/restaurants/actionRestaurant';
         $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
             'action' => $this->route['actionpanel']
         ]);
         $itemMenuAdmin = $this->model->getMenuAdminById($this->route['idaction']);
         $moduleData = $this->model->getModule($itemMenuAdmin['id_module']);
+        $this->view->pathHead = '../modules/'.$moduleData['name'].'/views/admin';
+        $this->view->pathAfterBody = '../modules/'.$moduleData['name'].'/views/admin';
         $vars = [
             'panel' => $this->panel,
             'adminPanel' => $this->adminPanel,

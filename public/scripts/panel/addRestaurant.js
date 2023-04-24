@@ -2,6 +2,7 @@ import getDataForm from "../lib/getDataForm.js";
 import message from "../lib/message.js";
 
 function addRestaurant(dataClient) {
+    console.log(dataClient);
     $.ajax({
         type: 'post',
         url: '/panel/admin/restaurants/add',
@@ -16,7 +17,7 @@ function addRestaurant(dataClient) {
             }
         },
         error: function(result) {
-            console.log(result);
+            message(result.message);
         },
     });
 }

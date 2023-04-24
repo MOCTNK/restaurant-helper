@@ -10,6 +10,7 @@ abstract class Module
     protected $about;
     protected $version;
     protected $author;
+    protected $descriptionMenuItemEmployee;
     private $db;
 
     public function __construct() {
@@ -45,6 +46,17 @@ abstract class Module
     protected function addMenuItemAdmin($name, $action)
     {
         $sql = "INSERT INTO menu_admin (id_module, name, action) VALUES (:id_module, :name, :action);";
+        $params = [
+            'id_module' => $this->getIdModule($this->name),
+            'name' => $name,
+            'action' => $action
+        ];
+        $this->db->query($sql, $params);
+    }
+
+    protected function addMenuItemEmployee($name, $action)
+    {
+        $sql = "INSERT INTO menu_employee (id_module, name, action) VALUES (:id_module, :name, :action);";
         $params = [
             'id_module' => $this->getIdModule($this->name),
             'name' => $name,

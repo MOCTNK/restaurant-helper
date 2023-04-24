@@ -46,7 +46,6 @@ html, body {
 
 .employee_container {
     width: 900px;
-    height: 30px;
     margin: auto;
 }
 
@@ -243,4 +242,33 @@ html, body {
 
 .module-button {
     float: right;
+}
+
+.menu_employee_card {
+    width: calc(205px - 40px);
+    height: calc(205px - 40px);
+    background-color: white;
+    border-radius: 5px;
+    float: left;
+    margin: 10px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.menu_employee_card_icon {
+    width: 120px;
+    height: 120px;
+    background-color: #4682B4;
+    margin: auto;
+    border-radius: 50%;
+}
+
+.menu_employee_card_label {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.menu_employee_card:hover {
+    opacity: 0.5;
 }

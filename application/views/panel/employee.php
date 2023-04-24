@@ -27,6 +27,12 @@
                 </div>
             </div>
         </div>
+        <div>
+            <div class="menu_employee_card">
+                <div class="menu_employee_card_icon"></div>
+                <div class="menu_employee_card_label">Менеджер пользователей</div>
+            </div>
+        </div>
     </div>
 </div>
 <script type="module" src="/public/scripts/panel/employee.js"></script>

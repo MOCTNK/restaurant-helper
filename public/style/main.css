@@ -114,3 +114,40 @@ a {
     color: #313131;
     text-decoration: none;
 }
+
+td, th {
+    padding: 5px 20px 5px 20px;
+}
+
+table {
+    border: 0;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #4682B4;
+    color: white;
+    border: 1px solid black;
+}
+
+td {
+    border: 1px solid black;
+    border-top: 0;
+}
+
+.tr-custom {
+    background-color: #e6e8ff;
+}
+
+.button_table {
+    width: 20px;
+    height: 20px;
+    float: left;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}
+
+.empty {
+    border: 0;
+    background-color: rgba(0,0,0,0);
+}
