@@ -34,6 +34,10 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
+    public function getDescriptionMenuItemEmployee($item) {
+        return $this->descriptionMenuItemEmployee[$item];
+    }
+
     private function getIdModule($name)
     {
         $sql = "SELECT id FROM modules WHERE name = :name;";
@@ -64,4 +68,6 @@ abstract class Module
         ];
         $this->db->query($sql, $params);
     }
+
+
 }

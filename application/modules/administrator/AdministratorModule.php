@@ -13,6 +13,10 @@ class AdministratorModule extends Module
             'manager_employee' => [
                 'color' => 'white',
                 'is_admin' => true
+            ],
+            'manager_accounts' => [
+                'color' => 'white',
+                'is_admin' => true
             ]
         ];
     }

@@ -20,25 +20,28 @@ class PanelController extends Controller
             View::redirect('/installer/setup');
         }
         $this->account = new Account();
-        $this->accountData = $this->account->getData();
         if(!$this->account->isLogin()) {
             View::redirect('/account/login');
         }
+        $this->accountData = $this->account->getData();
+        $this->accountData['positions'] = $this->account->getUserPosition($this->accountData['id_user']);
+        $this->accountData['is_admin'] = $this->account->isAdmin($this->accountData['id_user']);
         $this->panel = $this->view->getView('panel/panel.php',
             [
                 'userName'=> $this->model->getUserName($this->accountData),
-                'isAdmin'=> $this->account->isAdmin($this->accountData['id_user']),
+                'isAdmin'=> $this->accountData['is_admin'],
                 'action' => $this->route['panel']
             ]
         );
     }
 
     public function employeeAction() {
-        //debug($this->model->getMenuItemEmployee());
+        //debug($this->model->getMenuItemEmployee($this->accountData['is_admin'], $this->accountData['positions']));
+        //debug($this->account->getUserPosition($this->accountData['id_user']));
         $vars = [
             'panel' => $this->panel,
             'account' => $this->accountData,
-            'positions' => $this->account->getUserPosition($this->accountData['id_user'])
+            'menuEmployee' => $this->model->getMenuItemEmployee($this->accountData['is_admin'], $this->accountData['positions'])
         ];
         $this->view->render('Панель сотрудника', $vars);
     }

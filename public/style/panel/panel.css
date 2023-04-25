@@ -126,7 +126,7 @@ html, body {
     background-color: white;
     border-radius: 5px;
     float: left;
-    margin: 20px;
+    margin: 20px 0 0 20px;
     padding: 20px;
     cursor: pointer;
 }
@@ -261,6 +261,8 @@ html, body {
     background-color: #4682B4;
     margin: auto;
     border-radius: 50%;
+    background-repeat: no-repeat;
+    background-size: 120px 120px;
 }
 
 .menu_employee_card_label {

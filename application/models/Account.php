@@ -123,7 +123,7 @@ class Account extends Model
     }
 
     public function getUserPosition($id_user) {
-        $sql = "SELECT positions.name FROM user_position JOIN positions ON positions.id = user_position.id_position"
+        $sql = "SELECT positions.name, positions.code_name FROM user_position JOIN positions ON positions.id = user_position.id_position"
             ." WHERE user_position.id_user = :id_user;";
         $params = [
             'id_user' => $id_user

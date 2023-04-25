@@ -139,9 +139,33 @@ class Panel extends Model
         return $this->db->queryFetch($sql);
     }
 
-    public function getMenuItemEmployee() {
+    public function getMenuItemEmployee($is_admin, $positions) {
+        $result = array();
+        $menuEmployee = $this->getMenuEmployee();
+        foreach ($menuEmployee as $item) {
+            $path = '\application\modules\\'.$item['module_name'].'\\'.ucfirst($item['module_name']).'Module';
+            $module = new $path();
+            $description = $module->getDescriptionMenuItemEmployee($item['action']);
+            if(isset($description['is_admin'])) {
+                if($description['is_admin'] != $is_admin) {
+                    continue;
+                }
+            }
 
-        $sql = "SELECT * FROM menu_admin;";
-        return $this->getMenuEmployee();
+            if(isset($description['position'])) {
+                $tempResult = false;
+                foreach ($positions as $position) {
+                    if($description['position'] == $position['code_name']) {
+                        $tempResult = true;
+                        break;
+                    }
+                }
+                if(!$tempResult) {
+                    continue;
+                }
+            }
+            array_push($result, $item);
+        }
+        return $result;
     }
 }

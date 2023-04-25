@@ -16,7 +16,7 @@
                     <div class="employee_label_title">Должности: </div>
                     <div class="employee_label_box">
                         <ul>
-                            <?php foreach ($positions as $position):?>
+                            <?php foreach ($account['positions'] as $position):?>
                                 <li><?= $position['name']?></li>
                             <?php endforeach;?>
                         </ul>
@@ -28,10 +28,14 @@
             </div>
         </div>
         <div>
-            <div class="menu_employee_card">
-                <div class="menu_employee_card_icon"></div>
-                <div class="menu_employee_card_label">Менеджер пользователей</div>
-            </div>
+            <?php foreach ($menuEmployee as $item):?>
+                <a href="/panel/employee/action/<?= $item['id']?>">
+                    <div class="menu_employee_card">
+                        <div class="menu_employee_card_icon" style="background-image: url(/application/modules/<?= $item['module_name']?>/resources/action/<?= $item['action'].'.png'?>);"></div>
+                        <div class="menu_employee_card_label"><?= $item['name']?></div>
+                    </div>
+                </a>
+            <?php endforeach;?>
         </div>
     </div>
 </div>
