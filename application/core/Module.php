@@ -69,5 +69,23 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
+    protected function select($dbName, $data = [])
+    {
+        $sql = "SELECT ".(empty($data) ? "*" : "");
+        for($i = 0; $i < count($data); $i++) {
+            if($i != 0) {
+                $sql .= ", ";
+            }
+            $sql .= "data".$i.' ';
+        }
+
+        $params = [
+            'id_module' => $this->getIdModule($this->name),
+            'name' => $name,
+            'action' => $action
+        ];
+        $this->db->query($sql, $params);
+    }
+
 
 }

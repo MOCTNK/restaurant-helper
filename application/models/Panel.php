@@ -70,6 +70,14 @@ class Panel extends Model
         return $this->db->rowCount($sql, $params) == 1;
     }
 
+    public function existActionEmployee($id) {
+        $sql = "SELECT id FROM menu_employee WHERE id = :id;";
+        $params = [
+            'id' => $id
+        ];
+        return $this->db->rowCount($sql, $params) == 1;
+    }
+
     public function getRestaurantById($id) {
         $sql = "SELECT * FROM restaurants WHERE id = :id;";
         $params = [
@@ -137,6 +145,14 @@ class Panel extends Model
     public function getMenuEmployee() {
         $sql = "SELECT menu_employee.id, menu_employee.name, menu_employee.action, menu_employee.id_module, modules.name AS module_name FROM menu_employee JOIN modules ON modules.id = menu_employee.id_module;";
         return $this->db->queryFetch($sql);
+    }
+
+    public function getMenuEmployeeById($id) {
+        $sql = "SELECT * FROM menu_employee WHERE id = :id;";
+        $params = [
+            'id' => $id
+        ];
+        return $this->db->queryFetch($sql, $params)[0];
     }
 
     public function getMenuItemEmployee($is_admin, $positions) {

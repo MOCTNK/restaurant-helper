@@ -21,27 +21,31 @@ return [
         'controller' => 'panel',
         'action' => 'employee'
     ],
+    'panel/{panel:employee}/action/{id_action:\d+}' => [
+        'controller' => 'panel',
+        'action' => 'actionEmployee'
+    ],
     'panel/{panel:admin}' => [
         'controller' => 'panel',
         'action' => 'admin'
     ],
-    'panel/{panel:admin}/{actionpanel:restaurants}' => [
+    'panel/{panel:admin}/{action_panel:restaurants}' => [
         'controller' => 'panel',
         'action' => 'restaurants'
     ],
-    'panel/{panel:admin}/{actionpanel:restaurants}/add' => [
+    'panel/{panel:admin}/{action_panel:restaurants}/add' => [
         'controller' => 'panel',
         'action' => 'addRestaurant'
     ],
-    'panel/{panel:admin}/{actionpanel:restaurants}/{id:\d+}' => [
+    'panel/{panel:admin}/{action_panel:restaurants}/{id_restaurant:\d+}' => [
         'controller' => 'panel',
         'action' => 'infoRestaurant'
     ],
-    'panel/{panel:admin}/{actionpanel:restaurants}/{id:\d+}/action/{idaction:\d+}' => [
+    'panel/{panel:admin}/{action_panel:restaurants}/{id_restaurant:\d+}/action/{id_action:\d+}' => [
         'controller' => 'panel',
         'action' => 'actionRestaurant'
     ],
-    'panel/{panel:admin}/{actionpanel:modules}' => [
+    'panel/{panel:admin}/{action_panel:modules}' => [
         'controller' => 'panel',
         'action' => 'modules'
     ],

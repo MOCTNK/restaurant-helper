@@ -5,13 +5,15 @@ return [
 
     ],
     'authorize'=> [
-        'employee'
+        'employee',
+        'actionEmployee'
     ],
     'guest'=> [
 
     ],
     'admin'=> [
         'employee',
+        'actionEmployee',
         'admin',
         'restaurants',
         'addRestaurant',

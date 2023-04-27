@@ -46,6 +46,22 @@ class PanelController extends Controller
         $this->view->render('Панель сотрудника', $vars);
     }
 
+    public function actionEmployeeAction() {
+        if(!$this->model->existActionEmployee($this->route['id_action'])) {
+            View::errorCode(404);
+        }
+        $this->view->path = '/panel/employee/actionEmployee';
+        $itemMenuEmployee = $this->model->getMenuEmployeeById($this->route['id_action']);
+        $moduleData = $this->model->getModule($itemMenuEmployee['id_module']);
+        $vars = [
+            'panel' => $this->panel,
+            'view' => $this->view->getViewModule($moduleData['name'].'/views/employee/'.$itemMenuEmployee['action'].'.php'),
+            'moduleName' => $moduleData['name'],
+            'actionName' => $itemMenuEmployee['action']
+        ];
+        $this->view->render('Действие', $vars);
+    }
+
     public function adminAction() {
         View::redirect('/panel/admin/restaurants');
         $this->adminPanel = $this->view->getView('panel/admin/panel.php');
@@ -59,7 +75,7 @@ class PanelController extends Controller
     public function restaurantsAction() {
         $this->view->path = '/panel/admin/restaurants';
         $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-            'action' => $this->route['actionpanel']
+            'action' => $this->route['action_panel']
         ]);
         $vars = [
             'panel' => $this->panel,
@@ -78,7 +94,7 @@ class PanelController extends Controller
             $this->view->path = '/panel/admin/restaurants/addRestaurant';
             $this->view->pathAfterBody = '/panel/admin/restaurants/addRestaurant';
             $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-                'action' => $this->route['actionpanel']
+                'action' => $this->route['action_panel']
             ]);
             $vars = [
                 'panel' => $this->panel,
@@ -89,19 +105,19 @@ class PanelController extends Controller
     }
 
     public function infoRestaurantAction() {
-        if(!$this->model->existRestaurant($this->route['id'])) {
+        if(!$this->model->existRestaurant($this->route['id_restaurant'])) {
             View::errorCode(404);
         }
         $this->view->path = '/panel/admin/restaurants/infoRestaurant';
         $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-            'action' => $this->route['actionpanel']
+            'action' => $this->route['action_panel']
         ]);
         $vars = [
             'panel' => $this->panel,
             'adminPanel' => $this->adminPanel,
-            'restaurantsData' => $this->model->getRestaurantById($this->route['id']),
+            'restaurantsData' => $this->model->getRestaurantById($this->route['id_restaurant']),
             'menuAdmin' => $this->view->getView('panel/admin/restaurants/menuAdmin.php',[
-                'idRestaurant' => $this->route['id'],
+                'idRestaurant' => $this->route['id_restaurant'],
                 'items' => $this->model->getMenuAdmin()
             ])
         ];
@@ -109,17 +125,17 @@ class PanelController extends Controller
     }
 
     public function actionRestaurantAction() {
-        if(!$this->model->existRestaurant($this->route['id'])) {
+        if(!$this->model->existRestaurant($this->route['id_restaurant'])) {
             View::errorCode(404);
         }
-        if(!$this->model->existActionRestaurant($this->route['idaction'])) {
+        if(!$this->model->existActionRestaurant($this->route['id_action'])) {
             View::errorCode(404);
         }
         $this->view->path = '/panel/admin/restaurants/actionRestaurant';
         $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-            'action' => $this->route['actionpanel']
+            'action' => $this->route['action_panel']
         ]);
-        $itemMenuAdmin = $this->model->getMenuAdminById($this->route['idaction']);
+        $itemMenuAdmin = $this->model->getMenuAdminById($this->route['id_action']);
         $moduleData = $this->model->getModule($itemMenuAdmin['id_module']);
         $this->view->pathHead = '../modules/'.$moduleData['name'].'/views/admin';
         $this->view->pathAfterBody = '../modules/'.$moduleData['name'].'/views/admin';
@@ -128,8 +144,8 @@ class PanelController extends Controller
             'adminPanel' => $this->adminPanel,
             'view' => $this->view->getViewModule($moduleData['name'].'/views/admin/'.$itemMenuAdmin['action'].'.php'),
             'menuAdmin' => $this->view->getView('panel/admin/restaurants/menuAdmin.php',[
-                'idRestaurant' => $this->route['id'],
-                'idAction' => $this->route['idaction'],
+                'idRestaurant' => $this->route['id_restaurant'],
+                'idAction' => $this->route['id_action'],
                 'items' => $this->model->getMenuAdmin()
             ])
         ];
@@ -153,7 +169,7 @@ class PanelController extends Controller
         } else {
             $this->view->path = '/panel/admin/modules';
             $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-                'action' => $this->route['actionpanel']
+                'action' => $this->route['action_panel']
             ]);
             $this->view->pathAfterBody = '/panel/admin/modules';
             //debug($this->model->getModulesListDir());

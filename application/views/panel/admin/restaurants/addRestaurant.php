@@ -2,8 +2,8 @@
 <div class="panel_container">
     <?= $adminPanel?>
     <div class="admin_container">
-        <div class="restaurant_info">
-            <form id="form_add_restaurant">
+        <div class="container-large">
+            <form id="form_add_restaurant" style="width: 500px;">
                 <p><div class="title">Добавление ресторана</div></p>
                 <p class="custom-form_field">
                     <div class="custom-form_label star">Введите название ресторана</div>
@@ -26,6 +26,5 @@
                 </p>
             </form>
         </div>
-        <div class="restaurant_modules-list"></div>
     </div>
 </div>
