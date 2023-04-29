@@ -1,1 +1,4 @@
-alert('Accounts');
+
+$(document).ready(function() {
+    alert("good");
+});

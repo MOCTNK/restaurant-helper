@@ -3,6 +3,7 @@
 namespace application\core;
 
 use application\lib\DataBase;
+use application\models\Account;
 
 abstract class Module
 {
@@ -13,8 +14,11 @@ abstract class Module
     protected $descriptionMenuItemEmployee;
     private $db;
 
+    protected $account;
+
     public function __construct() {
         $this->db = new DataBase();
+        $this->account = new Account();
     }
 
     public function info() {
@@ -32,6 +36,10 @@ abstract class Module
             'name' => $this->name
         ];
         $this->db->query($sql, $params);
+    }
+
+    public function action($post) {
+        exit(json_encode($post));
     }
 
     public function getDescriptionMenuItemEmployee($item) {
@@ -69,23 +77,76 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    protected function select($dbName, $data = [])
+    protected function select($dbName)
     {
-        $sql = "SELECT ".(empty($data) ? "*" : "");
-        for($i = 0; $i < count($data); $i++) {
-            if($i != 0) {
-                $sql .= ", ";
-            }
-            $sql .= "data".$i.' ';
+        if(!$this->checkTables($dbName)) {
+            return [];
         }
-
+        $sql = "SELECT * FROM ".$dbName.";";
         $params = [
-            'id_module' => $this->getIdModule($this->name),
-            'name' => $name,
-            'action' => $action
         ];
-        $this->db->query($sql, $params);
+        return $this->db->queryFetch($sql, $params);
     }
 
+    public function insert($dbName, $params)
+    {
+        $columns = $this->showColumns($dbName);
+        if(!empty($columns)) {
+            $sql = "INSERT INTO ".$dbName." (";
+            for ($i = 0; $i < count($columns); $i++) {
+                if($i != 0) {
+                    $sql .= ", ";
+                }
+                $sql .= $columns[$i]['Field'];
+            }
+            $sql .= ") VALUES (";
+            for ($i = 0; $i < count($columns); $i++) {
+                if($i != 0) {
+                    $sql .= ", ";
+                }
+                $sql .= ":".$columns[$i]['Field'];
+            }
+            $sql .= ");";
+            $this->db->query($sql, $params);
+        }
+    }
+
+    protected function showTables()
+    {
+        $sql = "SHOW TABLES;";
+        return $this->db->queryFetch($sql);
+    }
+
+    private function checkTables($name)
+    {
+        $tables = $this->showTables();
+        for($i = 0; $i < count($tables); $i++) {
+            if($tables[$i]['Tables_in_restaurant_helper'] == $name) {
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    protected function showColumns($dbName)
+    {
+        if(!$this->checkTables($dbName)) {
+            return [];
+        }
+        $sql = "SHOW COLUMNS FROM ".$dbName.";";
+        return $this->db->queryFetch($sql);
+    }
+
+    protected function getView($path, $vars = []) {
+        extract($vars);
+        ob_start();
+        require 'application/modules/'.$this->name.'/views/'.$path;
+        return ob_get_clean();
+    }
+
+    protected function createUser($name, ) {
+
+    }
 
 }

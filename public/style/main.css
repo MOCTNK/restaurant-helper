@@ -135,8 +135,20 @@ td {
     border-top: 0;
 }
 
-.tr-custom {
+.tr-grey {
     background-color: #e6e8ff;
+}
+
+.tr-blue {
+    background-color: #f3fbff;
+}
+
+.table_image {
+    width: 50px;
+    height: 50px;
+    background-size: 50px 50px;
+    border-radius: 50%;
+    border: 1px solid black;
 }
 
 .button_table {
@@ -145,9 +157,59 @@ td {
     float: left;
     background-repeat: no-repeat;
     background-size: 20px 20px;
+    cursor: pointer;
+}
+
+.button_table:hover {
+    opacity: 0.5;
 }
 
 .empty {
     border: 0;
     background-color: rgba(0,0,0,0);
+}
+
+.custom-window {
+    width: 660px;
+    height: 460px;
+    background-color: white;
+    position: fixed;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    margin: -250px 0 0 -350px;
+    padding: 20px;
+}
+
+.custom-window_panel {
+    width: 100%;
+    height: 30px;
+}
+
+.custom-window_container {
+    width: 100%;
+    height: calc(100% - 30px);
+    overflow-y: auto;
+}
+
+.custom-window_close {
+    width: 20px;
+    height: 20px;
+    right: 0;
+    margin-right: 20px;
+    position: absolute;
+    cursor: pointer;
+    background-image: url(/public/resources/windowForm/close.png);
+    background-size: 20px 20px;
+}
+
+.custom-window_close:hover {
+    opacity: 0.5;
+}
+
+.darkness {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
 }

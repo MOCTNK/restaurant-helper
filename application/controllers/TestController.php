@@ -3,15 +3,16 @@
 namespace application\controllers;
 
 use application\core\Controller;
-use application\modules\template\AdministratorModule;
+use application\modules\administrator\AdministratorModule;
 
 
 class TestController extends Controller
 {
     public function indexAction() {
-        //$administrator = new AdministratorModule();
+        $administrator = new AdministratorModule();
         //$administrator->init();
-        $this->model->clearSettings();
-        //$this->view->render('Тест');
+        debug($administrator->insert('users', []));
+        //$this->model->clearSettings();
+        $this->view->render('Тест');
     }
 }

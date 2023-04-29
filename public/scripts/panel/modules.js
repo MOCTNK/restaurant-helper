@@ -1,4 +1,3 @@
-import message from "../lib/message.js";
 
 
 function getModuleList() {

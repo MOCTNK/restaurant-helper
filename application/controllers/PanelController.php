@@ -50,16 +50,24 @@ class PanelController extends Controller
         if(!$this->model->existActionEmployee($this->route['id_action'])) {
             View::errorCode(404);
         }
-        $this->view->path = '/panel/employee/actionEmployee';
         $itemMenuEmployee = $this->model->getMenuEmployeeById($this->route['id_action']);
         $moduleData = $this->model->getModule($itemMenuEmployee['id_module']);
-        $vars = [
-            'panel' => $this->panel,
-            'view' => $this->view->getViewModule($moduleData['name'].'/views/employee/'.$itemMenuEmployee['action'].'.php'),
-            'moduleName' => $moduleData['name'],
-            'actionName' => $itemMenuEmployee['action']
-        ];
-        $this->view->render('Действие', $vars);
+        if(!empty($_POST)) {
+            $path = '\application\modules\\'.$moduleData['name'].'\\'.ucfirst($moduleData['name']).'Module';
+            $module = new $path();
+            $module->action($_POST);
+        } else {
+            $this->view->path = '/panel/employee/actionEmployee';
+
+            $vars = [
+                'panel' => $this->panel,
+                'view' => $this->view->getViewModule($moduleData['name'].'/views/employee/'.$itemMenuEmployee['action'].'.php'),
+                'moduleName' => $moduleData['name'],
+                'idAction' => $this->route['id_action'],
+                'actionName' => $itemMenuEmployee['action']
+            ];
+            $this->view->render($itemMenuEmployee['name'], $vars);
+        }
     }
 
     public function adminAction() {

@@ -1,5 +1,4 @@
-import getDataForm from "../lib/getDataForm.js";
-import message from "../lib/message.js";
+
 
 function addRestaurant(dataClient) {
     console.log(dataClient);

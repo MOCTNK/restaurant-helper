@@ -1,5 +1,4 @@
-import getDataForm from '/public/scripts/lib/getDataForm.js'
-import message from "/public/scripts/lib/message.js";
+
 
 var step = 0;
 var maxStep = 3;
