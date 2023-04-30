@@ -11,8 +11,8 @@ class TestController extends Controller
     public function indexAction() {
         $administrator = new AdministratorModule();
         //$administrator->init();
-        debug($administrator->insert('users', []));
+        debug($administrator->select('users', 2));
         //$this->model->clearSettings();
-        $this->view->render('Тест');
+        //$this->view->render('Тест');
     }
 }

@@ -5,12 +5,12 @@ return [
         'setup'
     ],
     'authorize'=> [
-
+        'saveFile'
     ],
     'guest'=> [
 
     ],
     'admin'=> [
-
+        'saveFile'
     ],
 ];

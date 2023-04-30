@@ -9,6 +9,10 @@ return [
         'controller' => 'installer',
         'action' => 'setup'
     ],
+    'savefile/{directory:[a-zA-z]+}/{file_name:[a-zA-z0-9.]+}' => [
+        'controller' => 'installer',
+        'action' => 'saveFile'
+    ],
     'account/login' => [
         'controller' => 'account',
         'action' => 'login'

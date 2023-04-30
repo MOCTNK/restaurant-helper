@@ -41,3 +41,34 @@ function message(text, error = true) {
         $('.messages-box').css('visibility','hidden');
     });
 }
+
+function saveFile(file, directory, fileName) {
+    return $.ajax({
+        type: 'post',
+        url: '/savefile/'+directory+'/'+fileName,
+        data:  file,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(result) {
+            console.log(result);
+        },
+        error: function(result) {
+            console.log(result);
+        },
+    });
+}
+
+function randomInteger(min, max) {
+    let rand = min - 0.5 + Math.random() * (max - min + 1);
+    return Math.round(rand);
+}
+
+function getHash() {
+    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let hash = "";
+    for(let i = 0; i < 15; i++) {
+        hash += str[randomInteger(0, str.length - 1)];
+    }
+    return hash;
+}
