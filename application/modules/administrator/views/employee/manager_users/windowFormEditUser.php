@@ -3,7 +3,7 @@
     <div class="title">Редактирование пользователя</div>
     </p>
     <p class="custom-form_field">
-    <div class="avatar" style="background-image: url(/public/resources/account/<?= $data['avatar']?>);"></div>
+    <img class="avatar" src="/public/resources/account/<?= $data['avatar']?>" onerror="error404(this)"/>
     <input id="input_avatar" class="input_file" type="file" name="avatar" style="margin-top: 10px;"/>
     </p>
 </form>

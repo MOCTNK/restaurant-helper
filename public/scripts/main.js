@@ -72,3 +72,9 @@ function getHash() {
     }
     return hash;
 }
+
+function error404(image) {
+    image.onerror = "";
+    image.src = "/public/resources/error404.png";
+    return true;
+}

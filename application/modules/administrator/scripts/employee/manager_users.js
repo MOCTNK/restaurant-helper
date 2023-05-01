@@ -21,22 +21,10 @@ function createTable() {
     let result = getUsersList();
     result.done(function () {
         let data = result.responseJSON.data;
+        let view = result.responseJSON.view;
         $('#user_info').html(data.length);
-        $('.space-container').append('<table id="custom_table"></table>');
-        $('#custom_table').append(
-            '<tr><th class="empty"></th><th>id</th><th>Фото</th><th>ФИО</th><th>Дата рождения</th><th>Дата создания</th></tr>'
-        );
+        $('.space-container').html(view);
         for(let i = 0; i < data.length; i++) {
-            $('#custom_table').append(
-                '<tr class="'+(i % 2 !== 0 ? "tr-grey" : "tr-blue")+'"><td class="empty">'
-                + '<div id="edit_'+i+'" class="button_table" style="background-image: url(/public/resources/table/icon_edit.png);"></div>'
-                + '<div id="delete_'+i+'" class="button_table" style="background-image: url(/public/resources/table/icon_delete.png); margin-left: 15px;"></div></td>'
-                + '<td>'+data[i].id+'</td>'
-                + '<td><div class="table_image" style="background-image: url(/public/resources/account/'+data[i].avatar+');"></div></td>'
-                + '<td>'+data[i].surname+' '+data[i].name+' '+data[i].patronymic+'</td>'
-                + '<td>'+data[i].date_of_birth+'</td>'
-                + '<td>'+data[i].date+'</td></tr>'
-            );
             $('#edit_'+i).click(function () {
                 windowEditUser(data[i]);
             });
@@ -117,6 +105,28 @@ function editUser(dataClient) {
     });
 }
 
+function deleteUser(dataClient) {
+    $.ajax({
+        type: 'post',
+        url: URL_ACTION,
+        dataType: 'json',
+        data: dataClient,
+        success: function(result) {
+            console.log(result);
+            if(result.success) {
+                closeCustomWindow();
+                createTable();
+                message("Пользователь удален!", false);
+            } else {
+                message(result.message);
+            }
+        },
+        error: function(result) {
+            console.log(result);
+        },
+    });
+}
+
 function windowAddUser() {
     let result = getWindowForm("getWindowFormAddUser");
     result.done(function () {
@@ -124,7 +134,7 @@ function windowAddUser() {
         customWindow(data, 500, 650);
         $('#input_avatar').change(function (event) {
             let url = URL.createObjectURL(event.target.files[0]);
-            $('.avatar').css('background-image','url('+url+')');
+            $('.avatar').attr('src',url);
         });
         $('#form_add').submit(function (event) {
             event.preventDefault();
@@ -132,6 +142,7 @@ function windowAddUser() {
                 'action': "createUser",
                 'form': getDataForm($('#form_add'))
             };
+            dataClient.form.is_admin = $(".custom-checkbox").prop('checked');
             if(document.getElementById('input_avatar').files.length !== 0) {
                 dataClient.form.avatar = getHash()+'.png';
             }
@@ -147,7 +158,7 @@ function windowEditUser(user) {
         customWindow(data, 500, 550);
         $('#input_avatar').change(function (event) {
             let url = URL.createObjectURL(event.target.files[0]);
-            $('.avatar').css('background-image','url('+url+')');
+            $('.avatar').attr('src',url);
         });
         $('#form_edit').submit(function (event) {
             event.preventDefault();
@@ -168,8 +179,15 @@ function windowDeleteUser(user) {
     let result = getWindowForm("getWindowFormDeleteUser", user);
     result.done(function () {
         let data = result.responseJSON.view;
-        customWindow(data, 500, 250);
-
+        customWindow(data, 400, 250);
+        $('#form_delete').submit(function (event) {
+            event.preventDefault();
+            let dataClient = {
+                'action': "deleteUser",
+                'id': user.id
+            };
+            deleteUser(dataClient);
+        });
     });
 }
 

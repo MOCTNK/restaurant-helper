@@ -50,6 +50,17 @@ class PanelController extends Controller
         if(!$this->model->existActionEmployee($this->route['id_action'])) {
             View::errorCode(404);
         }
+        $menuItem = $this->model->getMenuItemEmployee($this->accountData['is_admin'], $this->accountData['positions']);
+        $checkAction = false;
+        foreach($menuItem as $item) {
+            if($item['id'] == $this->route['id_action']) {
+                $checkAction = true;
+                break;
+            }
+        }
+        if(!$checkAction) {
+            View::errorCode(404);
+        }
         $itemMenuEmployee = $this->model->getMenuEmployeeById($this->route['id_action']);
         $moduleData = $this->model->getModule($itemMenuEmployee['id_module']);
         if(!empty($_POST)) {

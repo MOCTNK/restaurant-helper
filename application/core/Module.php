@@ -77,15 +77,21 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    public function select($dbName, $id = null)
+    public function select($dbName, $column = null, $params = [])
     {
         if(!$this->checkTables($dbName)) {
             return [];
         }
         $sql = "SELECT * FROM ".$dbName;
-        if($id != null) {
-            $sql .= " WHERE id = ".(int)$id.";";
+        if($column != null) {
+            if($this->checkColumns($dbName, $column) && !empty($params)) {
+                $sql .= " WHERE ".$column." = :".$column.";";
+                return $this->db->queryFetch($sql, $params);
+            } else {
+                return [];
+            }
         }
+        $sql .= ";";
         return $this->db->queryFetch($sql);
     }
 
@@ -94,18 +100,28 @@ abstract class Module
         $columns = $this->showColumns($dbName);
         if(!empty($columns)) {
             $sql = "INSERT INTO ".$dbName." (";
+            $check = false;
             for ($i = 0; $i < count($columns); $i++) {
-                if($i != 0) {
+                if($columns[$i]['Field'] == 'id') {
+                    continue;
+                }
+                if($check) {
                     $sql .= ", ";
                 }
                 $sql .= $columns[$i]['Field'];
+                $check = true;
             }
             $sql .= ") VALUES (";
+            $check = false;
             for ($i = 0; $i < count($columns); $i++) {
-                if($i != 0) {
+                if($columns[$i]['Field'] == 'id') {
+                    continue;
+                }
+                if($check) {
                     $sql .= ", ";
                 }
                 $sql .= ":".$columns[$i]['Field'];
+                $check = true;
             }
             $sql .= ");";
             $this->db->query($sql, $params);
@@ -128,8 +144,22 @@ abstract class Module
                 $sql .= $columns[$i]['Field']." = :".$columns[$i]['Field'];
                 $check = true;
             }
-            $sql .= " WHERE id = ".$id.";";
+            $sql .= " WHERE id = ".(int)$id.";";
             $this->db->query($sql, $params);
+        }
+    }
+
+    protected function delete($dbName, $column, $params)
+    {
+        $columns = $this->showColumns($dbName);
+        if(!empty($columns)) {
+            if($this->checkColumns($dbName, $column) && !empty($params)) {
+                $sql = "DELETE FROM ".$dbName." WHERE ".$column." = :".$column.";";
+                $this->db->query($sql, $params);
+            } else {
+                return [];
+            }
+            $this->db->query($sql);
         }
     }
 
@@ -158,6 +188,18 @@ abstract class Module
         }
         $sql = "SHOW COLUMNS FROM ".$dbName.";";
         return $this->db->queryFetch($sql);
+    }
+
+    private function checkColumns($dbName, $name)
+    {
+        $columns = $this->showColumns($dbName);
+        for($i = 0; $i < count($columns); $i++) {
+            if($columns[$i]['Field'] == $name) {
+                return true;
+                break;
+            }
+        }
+        return false;
     }
 
     protected function getView($path, $vars = []) {
