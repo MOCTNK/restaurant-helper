@@ -141,6 +141,16 @@ class Account extends Model
         return $this->db->rowCount($sql, $params) > 0;
     }
 
+    public function isHeadAdmin($id_user) {
+        $sql = "SELECT user_position.id_user FROM user_position"
+            ." JOIN positions ON positions.id = user_position.id_position"
+            ." WHERE user_position.id_user = :id_user AND positions.code_name = 'head_admin';";
+        $params = [
+            'id_user' => $id_user
+        ];
+        return $this->db->rowCount($sql, $params) > 0;
+    }
+
     public function setToken($id_user, $token) {
         $sql = "UPDATE accounts SET token = :token WHERE id_user = :id_user;";
         $params = [
@@ -196,5 +206,40 @@ class Account extends Model
                 return false;
             }
         }
+    }
+
+    public function getPositionByName($name) {
+        $sql = "SELECT * FROM positions WHERE code_name = :code_name;";
+        $params = [
+            'code_name' => $name
+        ];
+        return $this->db->queryFetch($sql, $params)[0];
+    }
+
+    public function updateLogin($id_user, $login) {
+        $sql = "UPDATE accounts SET login = :login WHERE id_user = :id_user;";
+        $params = [
+            'id_user' => $id_user,
+            'login' => $login
+        ];
+        $this->db->query($sql, $params);
+    }
+
+    public function updatePassword($id_user, $password) {
+        $sql = "UPDATE accounts SET password = :password WHERE id_user = :id_user;";
+        $params = [
+            'id_user' => $id_user,
+            'password' => SHA1($password)
+        ];
+        $this->db->query($sql, $params);
+    }
+
+    public function depriveUserAdmin($id_user) {
+        $sql = "DELETE FROM user_position WHERE id_user = :id_user AND id_position = :id_position;";
+        $params = [
+            'id_user' => $id_user,
+            'id_position' => $this->getPositionByName('admin')['id']
+        ];
+        $this->db->query($sql, $params);
     }
 }

@@ -227,3 +227,16 @@ td {
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
 }
+
+.custom-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    float: left;
+    margin-right: 10px;
+    margin-top: -2px;
+}
+
+.custom-checkbox_label {
+
+}

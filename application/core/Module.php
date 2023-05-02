@@ -38,7 +38,7 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    public function action($post) {
+    public function action($post, $accountData) {
         exit(json_encode($post));
     }
 
@@ -77,89 +77,100 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    public function select($dbName, $column = null, $params = [])
+
+
+    public function select($dbName, $columns = [], $params = [])
     {
         if(!$this->checkTables($dbName)) {
             return [];
         }
         $sql = "SELECT * FROM ".$dbName;
-        if($column != null) {
-            if($this->checkColumns($dbName, $column) && !empty($params)) {
-                $sql .= " WHERE ".$column." = :".$column.";";
-                return $this->db->queryFetch($sql, $params);
-            } else {
-                return [];
+        if(!empty($columns) && !empty($params)) {
+            $sql .= " WHERE ";
+            for($i = 0; $i < count($columns); $i++) {
+                if($i != 0) {
+                    $sql .= ", ";
+                }
+                if($this->checkColumns($dbName, $columns[$i])) {
+                    $sql .= $columns[$i]." = :".$columns[$i];
+                } else {
+                    return [];
+                }
             }
+            $sql .= ";";
+            return $this->db->queryFetch($sql, $params);
         }
         $sql .= ";";
         return $this->db->queryFetch($sql);
     }
 
-    protected function insert($dbName, $params)
+    protected function insert($dbName, $columns, $params)
     {
-        $columns = $this->showColumns($dbName);
-        if(!empty($columns)) {
+        if(!empty($columns) && !empty($params)) {
+            if(!$this->checkTables($dbName)) {
+                return [];
+            }
             $sql = "INSERT INTO ".$dbName." (";
-            $check = false;
             for ($i = 0; $i < count($columns); $i++) {
-                if($columns[$i]['Field'] == 'id') {
-                    continue;
-                }
-                if($check) {
+                if($i != 0) {
                     $sql .= ", ";
                 }
-                $sql .= $columns[$i]['Field'];
-                $check = true;
+                if($this->checkColumns($dbName, $columns[$i])) {
+                    $sql .= $columns[$i];
+                } else {
+                    return;
+                }
             }
             $sql .= ") VALUES (";
-            $check = false;
             for ($i = 0; $i < count($columns); $i++) {
-                if($columns[$i]['Field'] == 'id') {
-                    continue;
-                }
-                if($check) {
+                if($i != 0) {
                     $sql .= ", ";
                 }
-                $sql .= ":".$columns[$i]['Field'];
-                $check = true;
+                $sql .= ":".$columns[$i];
             }
             $sql .= ");";
             $this->db->query($sql, $params);
         }
     }
 
-    protected function update($dbName, $params, $id)
+    protected function update($dbName, $id, $columns, $params)
     {
-        $columns = $this->showColumns($dbName);
-        if(!empty($columns)) {
+        if(!empty($columns) && !empty($params)) {
+            if(!$this->checkTables($dbName)) {
+                return [];
+            }
             $sql = "UPDATE ".$dbName." SET ";
-            $check = false;
             for ($i = 0; $i < count($columns); $i++) {
-                if($columns[$i]['Field'] == 'id') {
-                    continue;
-                }
-                if($check) {
+                if($i != 0) {
                     $sql .= ", ";
                 }
-                $sql .= $columns[$i]['Field']." = :".$columns[$i]['Field'];
-                $check = true;
+                if($this->checkColumns($dbName, $columns[$i])) {
+                    $sql .= $columns[$i]." = :".$columns[$i];
+                } else {
+                    return;
+                }
             }
             $sql .= " WHERE id = ".(int)$id.";";
             $this->db->query($sql, $params);
         }
     }
 
-    protected function delete($dbName, $column, $params)
+    protected function delete($dbName, $columns, $params)
     {
-        $columns = $this->showColumns($dbName);
         if(!empty($columns)) {
-            if($this->checkColumns($dbName, $column) && !empty($params)) {
-                $sql = "DELETE FROM ".$dbName." WHERE ".$column." = :".$column.";";
-                $this->db->query($sql, $params);
-            } else {
+            if(!$this->checkTables($dbName)) {
                 return [];
             }
-            $this->db->query($sql);
+            $sql = "DELETE FROM ".$dbName." WHERE ";
+            for ($i = 0; $i < count($columns); $i++) {
+                if($this->checkColumns($dbName, $columns[$i])) {
+                    $sql .= $columns[$i]." = :".$columns[$i];
+                } else {
+                    return;
+                }
+            }
+            $sql .= ";";
+            $this->db->query($sql, $params);
         }
     }
 
@@ -209,8 +220,5 @@ abstract class Module
         return ob_get_clean();
     }
 
-    protected function createUser($name, ) {
-
-    }
 
 }

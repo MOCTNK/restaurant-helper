@@ -11,11 +11,6 @@ class AdministratorModule extends Module
         $this->author = 'Мостовой Даниил';
         $this->descriptionMenuItemEmployee = [
             'manager_users' => [
-                'color' => 'white',
-                'is_admin' => true
-            ],
-            'manager_accounts' => [
-                'color' => 'white',
                 'is_admin' => true
             ]
         ];
@@ -26,10 +21,9 @@ class AdministratorModule extends Module
         parent::init();
         $this->addMenuItemAdmin('Сотрудники', 'employees');
         $this->addMenuItemEmployee('Менеджер пользователей', 'manager_users');
-        $this->addMenuItemEmployee('Менеджер аккаунтов', 'manager_accounts');
     }
 
-    public function action($post)
+    public function action($post, $accountData)
     {
         if(isset($post['action'])) {
             switch ($post['action']) {
@@ -52,7 +46,7 @@ class AdministratorModule extends Module
                     $this->actionEditUser($post['form']);
                     break;
                 case 'deleteUser':
-                    $this->actionDeleteUser($post['id']);
+                    $this->actionDeleteUser($post['id'], $accountData);
                     break;
                 default:
                     $result = array();
@@ -99,7 +93,7 @@ class AdministratorModule extends Module
             && isset($form['is_admin']) && $form['is_admin'] != null
         ) {
             if($this->account->checkPassword($form['password'], $form['password_repeat'])) {
-                if (!$this->account->existLogin($form['is_admin'])) {
+                if (!$this->account->existLogin($form['login'])) {
                     $id_user = $this->account->createUser(
                         $form['name'],
                         $form['surname'],
@@ -108,12 +102,12 @@ class AdministratorModule extends Module
                         (isset($form['avatar']) ? $form['avatar'] : 'avatar_default.png')
                     );
                     $id_account = $this->account->createAccount($id_user, $form['login'], $form['password']);
-                    if($form['is_admin'] === true) {
+                    if($form['is_admin'] == "true") {
                         $params = [
                             'id_user' => $id_user,
-                            'id_position' => 2
+                            'id_position' => $this->account->getPositionByName('admin')['id']
                         ];
-                        $this->insert('user_position', $params);
+                        $this->insert('user_position', ['id_user', 'id_position'], $params);
                     }
                     $result['message'] = "Успешно!";
                     $result['success'] = true;
@@ -138,7 +132,20 @@ class AdministratorModule extends Module
             && isset($form['surname']) && $form['surname'] != null
             && isset($form['patronymic']) && $form['patronymic'] != null
             && isset($form['date_of_birth']) && $form['date_of_birth'] != null
+            && isset($form['login']) && $form['login'] != null
+            && isset($form['is_admin']) && $form['is_admin'] != null
         ) {
+            if($form['password'] != null  && ($form['password'] == null || !$this->account->checkPassword($form['password'], $form['password_repeat']))) {
+                $result['message'] = "Пароль должен совпадать!";
+                $result['success'] = false;
+                exit(json_encode($result));
+            }
+            $accountUser = $this->getAccountByUser($form['id']);
+            if ($accountUser['login'] != $form['login'] && $this->account->existLogin($form['login'])) {
+                $result['message'] = "Логин занят!";
+                $result['success'] = false;
+                exit(json_encode($result));
+            }
             $this->editUser(
                 $form['id'],
                 $form['name'],
@@ -147,6 +154,21 @@ class AdministratorModule extends Module
                 $form['date_of_birth'],
                 (isset($form['avatar']) ? $form['avatar'] : 'avatar_default.png')
             );
+            $this->account->updateLogin($form['id'], $form['login']);
+            if(($form['is_admin'] == "true") != $this->account->isAdmin($form['id'])) {
+                if($form['is_admin'] == "true") {
+                    $params = [
+                        'id_user' => $form['id'],
+                        'id_position' => $this->account->getPositionByName('admin')['id']
+                    ];
+                    $this->insert('user_position', ['id_user', 'id_position'], $params);
+                } else {
+                    $this->account->depriveUserAdmin($form['id']);
+                }
+            }
+            if($form['password'] != null) {
+                $this->account->updatePassword($form['id'], $form['password']);
+            }
             $result['message'] = "Успешно!";
             $result['success'] = true;
         } else {
@@ -156,16 +178,34 @@ class AdministratorModule extends Module
         exit(json_encode($result));
     }
 
-    private function actionDeleteUser($id) {
+    private function actionDeleteUser($id, $accountData) {
         $result = array();
-        $this->deleteUser($id);
-        $result['message'] = "Успешно!";
-        $result['success'] = true;
+        if($id != $accountData['id_user']) {
+            if(!$this->account->isHeadAdmin($id)) {
+                $this->deleteUser($id);
+                $result['message'] = "Успешно!";
+                $result['success'] = true;
+            } else {
+                $result['message'] = "Вы не можете удалить Главного администратора!";
+                $result['success'] = false;
+            }
+        } else {
+            $result['message'] = "Вы не можете удалить себя!";
+            $result['success'] = false;
+        }
         exit(json_encode($result));
     }
 
-    public function editUser($idUser, $name, $surname, $patronymic, $date_of_birth, $avatar) {
+    private function editUser($idUser, $name, $surname, $patronymic, $date_of_birth, $avatar) {
         $user = $this->getUserById($idUser);
+        $columns = [
+            'name',
+            'surname',
+            'patronymic',
+            'date_of_birth',
+            'avatar',
+            'date'
+        ];
         $params = [
             'name' => ($name != $user['name'] ? $name : $user['name']),
             'surname' => ($surname != $user['surname'] ? $surname : $user['surname']),
@@ -174,22 +214,30 @@ class AdministratorModule extends Module
             'avatar' => ($avatar != 'avatar_default.png' && $avatar != $user['avatar'] ? $avatar : $user['avatar']),
             'date' => $user['date']
         ];
-        $this->update('users', $params, $idUser);
+        $this->update('users', $idUser, $columns, $params);
     }
 
-    public function deleteUser($idUser) {
+    private function deleteUser($idUser) {
         $params = [
             'id' => $idUser
         ];
-        $this->delete('users', 'id', $params);
+        $this->delete('users', ['id'], $params);
     }
 
-    public function getUserById($idUser) {
+    private function getUserById($idUser) {
         $params = [
             'id' => $idUser
         ];
-       return $this->select('users', 'id', $params)[0];
+       return $this->select('users', ['id'], $params)[0];
     }
+
+    private function getAccountByUser($idUser) {
+        $params = [
+            'id_user' => $idUser
+        ];
+        return $this->select('accounts', ['id_user'], $params)[0];
+    }
+
     private function getUsersList() {
         $userList = $this->select('users');
         for ($i = 0; $i < count($userList); $i++) {
@@ -197,7 +245,7 @@ class AdministratorModule extends Module
                 'id_user' => $userList[$i]['id']
             ];
             $userList[$i]['is_admin'] = $this->account->isAdmin($userList[$i]['id']);
-            $account = $this->select('accounts', 'id_user', $params)[0];
+            $account = $this->select('accounts', ['id_user'], $params)[0];
             $userList[$i]['login'] = $account['login'];
         }
         return $userList;

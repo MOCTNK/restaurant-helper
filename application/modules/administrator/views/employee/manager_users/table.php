@@ -6,7 +6,7 @@
         <th>ФИО</th>
         <th>Дата рождения</th>
         <th>Логин</th>
-        <th>Админ</th>
+        <th>Администратор</th>
         <th>Дата создания</th>
     </tr>
     <?php for($i = 0; $i < count($data); $i++):?>
@@ -20,8 +20,8 @@
         <td><?= $data[$i]['surname']." ".$data[$i]['name']." ".$data[$i]['patronymic']?></td>
         <td><?= sqlToDate($data[$i]['date_of_birth'])?></td>
         <td><?= $data[$i]['login']?></td>
-        <td><?= $data[$i]['is_admin']?></td>
-        <td><?= $data[$i]['date']?></td>
+        <td><?= $data[$i]['is_admin'] ? '<div style="color: green;">true</div>' : 'false'?></td>
+        <td><?= sqlToDateTime($data[$i]['date'])?></td>
     </tr>
     <?php endfor;?>
 </table>

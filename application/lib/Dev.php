@@ -14,3 +14,9 @@ function sqlToDate($date) {
     $result = explode('-',$date);
     return $result[2].".".$result[1].".".$result[0];
 }
+
+function sqlToDateTime($date) {
+    $resultDate = explode(' ',$date);
+    $result = explode('-',$resultDate[0]);
+    return $result[2].".".$result[1].".".$result[0]." ".$resultDate[1];
+}

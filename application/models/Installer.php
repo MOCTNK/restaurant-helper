@@ -152,7 +152,7 @@ class Installer extends Model
                         $sql = "INSERT INTO user_position (id_user, id_position) VALUES (:id_user, :id_position);";
                         $params = [
                             'id_user' => $id_user,
-                            'id_position' => 1
+                            'id_position' => $account->getPositionByName('head_admin')['id']
                         ];
                         $this->db->query($sql, $params);
                         $result['message'] = "Успешно!";
