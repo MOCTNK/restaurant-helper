@@ -155,7 +155,7 @@ class PanelController extends Controller
         if(!empty($_POST)) {
             $path = '\application\modules\\'.$moduleData['name'].'\\'.ucfirst($moduleData['name']).'Module';
             $module = new $path();
-            $module->action($_POST, $this->accountData);
+            $module->action($_POST, $this->accountData, $this->model->getRestaurantById($this->route['id_restaurant']));
         } else {
             $this->view->path = '/panel/admin/restaurants/actionRestaurant';
             $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
@@ -192,6 +192,9 @@ class PanelController extends Controller
             }
             if(isset($_POST['action']) && $_POST['action'] == "initModule") {
                 $this->model->initModule($_POST);
+            }
+            if(isset($_POST['action']) && $_POST['action'] == "disableModule") {
+                $this->model->disableModule($_POST);
             }
         } else {
             $this->view->path = '/panel/admin/modules';

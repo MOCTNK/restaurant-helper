@@ -38,7 +38,18 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    public function action($post, $accountData) {
+    public function disable()
+    {
+        $sql = "DELETE positions FROM positions JOIN module_position ON positions.id = module_position.id_position WHERE module_position.id_module = :id_module;";
+        $params = [
+            'id_module' => $this->getIdModule($this->name)
+        ];
+        $this->db->query($sql, $params);
+        $sql = "DELETE FROM modules WHERE id = :id_module;";
+        $this->db->query($sql, $params);
+    }
+
+    public function action($post, $accountData, $restaurantData = []) {
         exit(json_encode($post));
     }
 
@@ -77,9 +88,29 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
+    protected function addPosition($name, $codeName)
+    {
+        $sql = "INSERT INTO positions (name, code_name, is_admin) VALUES (:name, :code_name, :is_admin);";
+        $params = [
+            'name' => $name,
+            'code_name' => $codeName,
+            'is_admin' => 0
+        ];
+        $this->db->query($sql, $params);
+        $sql = "SELECT id FROM positions WHERE code_name = :code_name;";
+        $params = [
+            'code_name' => $codeName
+        ];
+        $idPosition = $this->db->queryFetch($sql, $params)[0]['id'];
+        $sql = "INSERT INTO module_position (id_module, id_position) VALUES (:id_module, :id_position);";
+        $params = [
+            'id_module' => $this->getIdModule($this->name),
+            'id_position' => $idPosition
+        ];
+        $this->db->query($sql, $params);
+    }
 
-
-    public function select($dbName, $columns = [], $params = [])
+    protected function select($dbName, $columns = [], $params = [])
     {
         if(!$this->checkTables($dbName)) {
             return [];

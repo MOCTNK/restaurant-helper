@@ -49,6 +49,16 @@ class Panel extends Model
         exit(json_encode($result));
     }
 
+    public function disableModule($post) {
+        $result = array();
+        $path = '\application\modules\\'.$_POST['module'].'\\'.ucfirst($_POST['module']).'Module';
+        $module = new $path();
+        $module->disable();
+        $result['message'] = "Успешно!";
+        $result['success'] = true;
+        exit(json_encode($result));
+    }
+
     public function getRestaurantsList() {
         $sql = "SELECT * FROM restaurants;";
         return $this->db->queryFetch($sql);
@@ -108,11 +118,10 @@ class Panel extends Model
                 $path = '\application\modules\\'.$file.'\\'.ucfirst($file).'Module';
                 $module = new $path();
                 $moduleInfo = $module->info();
-                $moduleInfo['code_name'] = $file;
                 $moduleInfo['init'] = false;
                 if(!empty($moduleList)) {
                     for($i = 0; $i < count($moduleList); $i++) {
-                        if($moduleList[$i]['code_name'] = $file) {
+                        if($moduleList[$i]['name'] == $file) {
                             $moduleInfo['init'] = true;
                             break;
                         }

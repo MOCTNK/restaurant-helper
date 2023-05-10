@@ -8,7 +8,11 @@ class DataBase
     protected $link;
     public function __construct() {
         $settings = Loader::getSettings();
-        $this->link = new PDO('mysql:host='.$settings['db']['host'].';dbname='.$settings['db']['db_name'], $settings['db']['user'], $settings['db']['password']);
+        $this->link = new PDO(
+            'mysql:host='.$settings['db']['host']
+            .';dbname='.$settings['db']['db_name'],
+            $settings['db']['user'], $settings['db']['password']
+        );
     }
 
     public function query($sql, $params = []) {

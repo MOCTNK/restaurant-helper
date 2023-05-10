@@ -23,7 +23,7 @@ class AdministratorModule extends Module
         $this->addMenuItemEmployee('Менеджер пользователей', 'manager_users');
     }
 
-    public function action($post, $accountData)
+    public function action($post, $accountData, $restaurantData = [])
     {
         if(isset($post['action'])) {
             switch ($post['action']) {
@@ -48,6 +48,9 @@ class AdministratorModule extends Module
                 case 'deleteUser':
                     $this->actionDeleteUser($post['id'], $accountData);
                     break;
+                case 'getEmployeesList':
+                    $this->actionGetEmployeesList($restaurantData['id']);
+                    break;
                 default:
                     $result = array();
                     $result['message'] = "Неуказано действие!";
@@ -61,12 +64,25 @@ class AdministratorModule extends Module
         $result = array();
         $result['message'] = "Успешно!";
         $result['success'] = true;
-        $userList =  $this->getUsersList();
+        $userList = $this->getUsersList();
         $result['data'] = $userList;
         $vars = [
             'data' => $userList
         ];
         $result['view'] = $this->getView('employee/manager_users/table.php', $vars);
+        exit(json_encode($result));
+    }
+
+    private function actionGetEmployeesList($idRestaurant) {
+        $result = array();
+        $result['message'] = "Успешно!";
+        $result['success'] = true;
+        $employeesList = $this->getEmployeesList($idRestaurant);
+        $result['data'] = $employeesList;
+        $vars = [
+            'data' => $employeesList
+        ];
+        $result['view'] = $this->getView('admin/employees/table.php', $vars);
         exit(json_encode($result));
     }
 
@@ -249,6 +265,56 @@ class AdministratorModule extends Module
             $userList[$i]['login'] = $account['login'];
         }
         return $userList;
+    }
+
+    private function getUserPositionList($idUserPosition) {
+        return $this->select(
+            'user_position',
+            ['id'],
+            ['id' => $idUserPosition]
+        )[0];
+    }
+
+    private function getPositionById($id) {
+        return $this->select(
+            'positions',
+            ['id'],
+            ['id' => $id]
+        )[0];
+    }
+
+    private function getEmployeesList($idRestaurant) {
+        $result = array();
+        $employeesList = $this->select(
+            'restaurant_employees',
+            ['id_restaurant'],
+            ['id_restaurant' => $idRestaurant]
+        );
+        for($i = 0; $i < count($employeesList); $i++) {
+            $userData = [];
+            $userPositionList = $this->getUserPositionList($employeesList[$i]['id_user_position']);
+            $check = false;
+            for($j = 0; $j < count($result); $j++) {
+                if($userPositionList['id_user'] == $result[$j]['user']['id']) {
+                    $check = true;
+                    break;
+                }
+            }
+            if($check) {
+                continue;
+            }
+            $userData['user'] = $this->getUserById($userPositionList['id_user']);
+            $arrayPositions = array();
+            for($j = 0; $j < count($employeesList); $j++) {
+                $userPositionListOther= $this->getUserPositionList($employeesList[$j]['id_user_position']);
+                if($userData['user']['id'] == $userPositionListOther['id_user']) {
+                    array_push($arrayPositions, $this->getPositionById($userPositionListOther['id_position']));
+                }
+            }
+            $userData['positions'] = $arrayPositions;
+            array_push($result, $userData);
+        }
+        return $result;
     }
 
 }
