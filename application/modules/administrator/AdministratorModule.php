@@ -31,13 +31,13 @@ class AdministratorModule extends Module
                     $this->actionGetUserList();
                     break;
                 case 'getWindowFormAddUser':
-                    $this->actionGetWindowForm('windowForm');
+                    $this->actionGetWindowForm('employee/manager_users/windowForm');
                     break;
                 case 'getWindowFormEditUser':
-                    $this->actionGetWindowForm('windowFormEditUser', $post['vars']);
+                    $this->actionGetWindowForm('employee/manager_users/windowFormEditUser', $post['vars']);
                     break;
                 case 'getWindowFormDeleteUser':
-                    $this->actionGetWindowForm('windowFormDeleteUser', $post['vars']);
+                    $this->actionGetWindowForm('employee/manager_users/windowFormDeleteUser', $post['vars']);
                     break;
                 case 'createUser':
                     $this->actionCreateUser($post['form']);
@@ -50,6 +50,9 @@ class AdministratorModule extends Module
                     break;
                 case 'getEmployeesList':
                     $this->actionGetEmployeesList($restaurantData['id']);
+                    break;
+                case 'getWindowFormAddEmployee':
+                    $this->actionGetWindowForm('admin/employees/windowFormAddEmployee');
                     break;
                 default:
                     $result = array();
@@ -93,7 +96,7 @@ class AdministratorModule extends Module
         $vars = [
             'data' => $data
         ];
-        $result['view'] = $this->getView('employee/manager_users/'.$action.'.php', $vars);
+        $result['view'] = $this->getView($action.'.php', $vars);
         exit(json_encode($result));
     }
 
@@ -317,4 +320,16 @@ class AdministratorModule extends Module
         return $result;
     }
 
+
+    public function getNotRestaurantEmployees($idRestaurant) {
+        $restaurantEmployees = $this->getEmployeesList($idRestaurant);
+        $columns = ['id'];
+        $params = [];
+        $params['id'] = [];
+        for($i = 0; $i < count($restaurantEmployees); $i++) {
+            $temp['id'.($i + 1)] = $restaurantEmployees[$i]['user']['id'];
+            $params['id'] = $temp;
+        }
+        return $this->select('users', $columns, $params, false);
+    }
 }

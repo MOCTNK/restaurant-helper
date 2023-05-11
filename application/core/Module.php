@@ -110,7 +110,7 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    protected function select($dbName, $columns = [], $params = [])
+    public function select($dbName, $columns = [], $params = [], $equality = true)
     {
         if(!$this->checkTables($dbName)) {
             return [];
@@ -120,10 +120,27 @@ abstract class Module
             $sql .= " WHERE ";
             for($i = 0; $i < count($columns); $i++) {
                 if($i != 0) {
-                    $sql .= ", ";
+                    $sql .= $equality ? " OR " : " AND ";
                 }
                 if($this->checkColumns($dbName, $columns[$i])) {
-                    $sql .= $columns[$i]." = :".$columns[$i];
+                    if(array_key_exists($columns[$i], $params)) {
+                        if(is_array($params[$columns[$i]])) {
+                            for($j = 0; $j < count($params[$columns[$i]]); $j++) {
+                                if($i == 0 && $j != 0) {
+                                    $sql .= $equality ? " OR " : " AND ";
+                                } elseif ($j != 0) {
+                                    $sql .= $equality ? " OR " : " AND ";
+                                }
+                                $params[$columns[$i].($j+1)] = $params[$columns[$i]][$columns[$i].($j+1)];
+                                $sql .= $columns[$i]." ".($equality ? "=" : "<>")." :".$columns[$i].($j+1);
+                            }
+                            unset($params[$columns[$i]]);
+                        } else {
+                            $sql .= $columns[$i]." ".($equality ? "=" : "<>")." :".$columns[$i];
+                        }
+                    } else {
+                        return [];
+                    }
                 } else {
                     return [];
                 }
@@ -186,7 +203,7 @@ abstract class Module
         }
     }
 
-    protected function delete($dbName, $columns, $params)
+    protected function delete($dbName, $columns, $params, $equality = true)
     {
         if(!empty($columns)) {
             if(!$this->checkTables($dbName)) {
@@ -194,8 +211,28 @@ abstract class Module
             }
             $sql = "DELETE FROM ".$dbName." WHERE ";
             for ($i = 0; $i < count($columns); $i++) {
+                if($i != 0) {
+                    $sql .= $equality ? " OR " : " AND ";
+                }
                 if($this->checkColumns($dbName, $columns[$i])) {
-                    $sql .= $columns[$i]." = :".$columns[$i];
+                    if(array_key_exists($columns[$i], $params)) {
+                        if(is_array($params[$columns[$i]])) {
+                            for($j = 0; $j < count($params[$columns[$i]]); $j++) {
+                                if($i == 0 && $j != 0) {
+                                    $sql .= $equality ? " OR " : " AND ";
+                                } elseif ($j != 0) {
+                                    $sql .= $equality ? " OR " : " AND ";
+                                }
+                                $params[$columns[$i].($j+1)] = $params[$columns[$i]][$columns[$i].($j+1)];
+                                $sql .= $columns[$i]." ".($equality ? "=" : "<>")." :".$columns[$i].($j+1);
+                            }
+                            unset($params[$columns[$i]]);
+                        } else {
+                            $sql .= $columns[$i]." ".($equality ? "=" : "<>")." :".$columns[$i];
+                        }
+                    } else {
+                        return;
+                    }
                 } else {
                     return;
                 }

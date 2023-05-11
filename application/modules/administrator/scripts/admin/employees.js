@@ -37,6 +37,22 @@ function createTable() {
         }
     });
 }
+
+function windowEmployeeUser() {
+    let result = getWindowForm("getWindowFormAddEmployee");
+    result.done(function () {
+        let data = result.responseJSON.view;
+        customWindow(data, 500, 800);
+        $('#form_add').submit(function (event) {
+            event.preventDefault();
+            alert("Gun");
+        });
+    });
+}
+
 $(document).ready(function() {
+    $('#add_employee').click(function () {
+        windowEmployeeUser();
+    });
     createTable();
 });

@@ -10,11 +10,11 @@ use application\modules\administrator\AdministratorModule;
 class TestController extends Controller
 {
     public function indexAction() {
-        //$administrator = new AdministratorModule();
+        $administrator = new AdministratorModule();
         //$administrator->init();
         //$account = new Account();
-        //debug($account->isAdmin(1));
-        $this->model->clearSettings();
+        debug($administrator->getNotRestaurantEmployees(1));
+        //$this->model->clearSettings();
         //$this->view->render('Тест');
     }
 }
