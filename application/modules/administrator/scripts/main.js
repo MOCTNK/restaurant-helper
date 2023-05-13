@@ -3,6 +3,7 @@ function getWindowForm(action, vars = []) {
         'action': action,
         'vars': vars
     };
+    console.log(dataClient);
     return $.ajax({
         type: 'post',
         url: URL_ACTION,

@@ -21,7 +21,6 @@ function getViewStep() {
             dataType: 'json',
             data: dataClient,
             success: function (result) {
-                console.log(result);
                 step++;
                 if (result.success) {
                     if(result.next) {
@@ -36,6 +35,7 @@ function getViewStep() {
                 }
             },
             error: function (result) {
+                message("Ошибка запроса! Результат в консоле!");
                 console.log(result);
             },
         });
@@ -49,7 +49,6 @@ function checkStep(dataClient) {
         dataType: 'json',
         data: dataClient,
         success: function(result) {
-            console.log(result);
             if(result.success) {
                 getViewStep();
             } else {
@@ -57,6 +56,7 @@ function checkStep(dataClient) {
             }
         },
         error: function(result) {
+            message("Ошибка запроса! Результат в консоле!");
             console.log(result);
         },
     });

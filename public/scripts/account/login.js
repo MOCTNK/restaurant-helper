@@ -7,7 +7,6 @@ function login(dataClient) {
         dataType: 'json',
         data: dataClient,
         success: function(result) {
-            console.log(result);
             if(result.success) {
                 window.location.replace("/panel/employee");
             } else {
@@ -15,6 +14,7 @@ function login(dataClient) {
             }
         },
         error: function(result) {
+            message("Ошибка запроса! Результат в консоле!");
             console.log(result);
         },
     });

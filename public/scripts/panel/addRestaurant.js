@@ -16,7 +16,8 @@ function addRestaurant(dataClient) {
             }
         },
         error: function(result) {
-            message(result.message);
+            message("Ошибка запроса! Результат в консоле!");
+            message(result);
         },
     });
 }

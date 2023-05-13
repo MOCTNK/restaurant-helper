@@ -41,6 +41,6 @@
     <input type="password" placeholder="Пароль" name="password_repeat"/>
     </p>
     <p style="height: 50px;">
-        <button type="submit" style="float: right;">Обновить</button>
+        <button type="submit" style="float: right;">Изменить</button>
     </p>
 </form>

@@ -1,3 +1,4 @@
+<?php if(!empty($data)):?>
 <table id="custom_table">
     <tr>
         <th class="empty"></th>
@@ -30,3 +31,4 @@
         ?>
     <?php endforeach;?>
 </table>
+<?php endif;?>

@@ -13,7 +13,8 @@ function getModuleList() {
 
         },
         error: function(result) {
-
+            message("Ошибка запроса! Результат в консоле!");
+            console.log(result);
         },
     });
 }
@@ -37,6 +38,7 @@ function initModule(module) {
             }
         },
         error: function(result) {
+            message("Ошибка запроса! Результат в консоле!");
             console.log(result);
         },
     });
@@ -61,6 +63,7 @@ function disableModule(module) {
             }
         },
         error: function(result) {
+            message("Ошибка запроса! Результат в консоле!");
             console.log(result);
         },
     });

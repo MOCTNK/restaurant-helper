@@ -110,7 +110,7 @@ abstract class Module
         $this->db->query($sql, $params);
     }
 
-    public function select($dbName, $columns = [], $params = [], $equality = true)
+    public function select($dbName, $columns = [], $params = [], $equality = true, $isOR = true)
     {
         if(!$this->checkTables($dbName)) {
             return [];
@@ -120,16 +120,16 @@ abstract class Module
             $sql .= " WHERE ";
             for($i = 0; $i < count($columns); $i++) {
                 if($i != 0) {
-                    $sql .= $equality ? " OR " : " AND ";
+                    $sql .= $isOR ? " OR " : " AND ";
                 }
                 if($this->checkColumns($dbName, $columns[$i])) {
                     if(array_key_exists($columns[$i], $params)) {
                         if(is_array($params[$columns[$i]])) {
                             for($j = 0; $j < count($params[$columns[$i]]); $j++) {
                                 if($i == 0 && $j != 0) {
-                                    $sql .= $equality ? " OR " : " AND ";
+                                    $sql .= $isOR ? " OR " : " AND ";
                                 } elseif ($j != 0) {
-                                    $sql .= $equality ? " OR " : " AND ";
+                                    $sql .= $isOR ? " OR " : " AND ";
                                 }
                                 $params[$columns[$i].($j+1)] = $params[$columns[$i]][$columns[$i].($j+1)];
                                 $sql .= $columns[$i]." ".($equality ? "=" : "<>")." :".$columns[$i].($j+1);
@@ -156,7 +156,7 @@ abstract class Module
     {
         if(!empty($columns) && !empty($params)) {
             if(!$this->checkTables($dbName)) {
-                return [];
+                return;
             }
             $sql = "INSERT INTO ".$dbName." (";
             for ($i = 0; $i < count($columns); $i++) {
@@ -179,6 +179,15 @@ abstract class Module
             $sql .= ");";
             $this->db->query($sql, $params);
         }
+        $sql = "SELECT id FROM ".$dbName." WHERE ";
+        for ($i = 0; $i < count($columns); $i++) {
+            if($i != 0) {
+                $sql .= " AND ";
+            }
+            $sql .= $columns[$i]." = :".$columns[$i];
+        }
+        $sql .= " ORDER BY id DESC LIMIT 1;";
+        return $this->db->queryFetch($sql, $params)[0]['id'];
     }
 
     protected function update($dbName, $id, $columns, $params)
@@ -203,7 +212,7 @@ abstract class Module
         }
     }
 
-    protected function delete($dbName, $columns, $params, $equality = true)
+    protected function delete($dbName, $columns, $params, $equality = true, $isOR = true)
     {
         if(!empty($columns)) {
             if(!$this->checkTables($dbName)) {
@@ -212,16 +221,16 @@ abstract class Module
             $sql = "DELETE FROM ".$dbName." WHERE ";
             for ($i = 0; $i < count($columns); $i++) {
                 if($i != 0) {
-                    $sql .= $equality ? " OR " : " AND ";
+                    $sql .= $isOR ? " OR " : " AND ";
                 }
                 if($this->checkColumns($dbName, $columns[$i])) {
                     if(array_key_exists($columns[$i], $params)) {
                         if(is_array($params[$columns[$i]])) {
                             for($j = 0; $j < count($params[$columns[$i]]); $j++) {
                                 if($i == 0 && $j != 0) {
-                                    $sql .= $equality ? " OR " : " AND ";
+                                    $sql .= $isOR ? " OR " : " AND ";
                                 } elseif ($j != 0) {
-                                    $sql .= $equality ? " OR " : " AND ";
+                                    $sql .= $isOR ? " OR " : " AND ";
                                 }
                                 $params[$columns[$i].($j+1)] = $params[$columns[$i]][$columns[$i].($j+1)];
                                 $sql .= $columns[$i]." ".($equality ? "=" : "<>")." :".$columns[$i].($j+1);

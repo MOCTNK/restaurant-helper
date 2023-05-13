@@ -52,7 +52,30 @@ class AdministratorModule extends Module
                     $this->actionGetEmployeesList($restaurantData['id']);
                     break;
                 case 'getWindowFormAddEmployee':
-                    $this->actionGetWindowForm('admin/employees/windowFormAddEmployee');
+                    $vars = [
+                        'employees' => $this->getNotRestaurantEmployees($restaurantData['id']),
+                        'positionsList' => $this->getEmployeesPositionsList()
+                    ];
+                    $this->actionGetWindowForm('admin/employees/windowFormAddEmployee', $vars);
+                    break;
+                case 'getWindowFormEditEmployee':
+                    $vars = [
+                        'employee' => $post['vars'],
+                        'positionsList' => $this->getEmployeesPositionsList()
+                    ];
+                    $this->actionGetWindowForm('admin/employees/windowFormEditEmployee', $vars);
+                    break;
+                case 'getWindowFormDeleteEmployee':
+                    $this->actionGetWindowForm('admin/employees/windowFormDeleteEmployee', $post['vars']);
+                    break;
+                case 'createEmployee':
+                    $this->actionCreateEmployee($restaurantData['id'], $post['idEmployee'], $post['idPosition']);
+                    break;
+                case 'editEmployee':
+                    $this->actionEditEmployee($restaurantData['id'], $post['idUser'], $post['idPosition']);
+                    break;
+                case 'deleteEmployee':
+                    $this->actionDeleteEmployee($restaurantData['id'], $post['id']);
                     break;
                 default:
                     $result = array();
@@ -93,6 +116,7 @@ class AdministratorModule extends Module
         $result = array();
         $result['message'] = "Успешно!";
         $result['success'] = true;
+        $result['data'] = $data;
         $vars = [
             'data' => $data
         ];
@@ -138,6 +162,32 @@ class AdministratorModule extends Module
                 $result['message'] = "Пароль должен совпадать!";
                 $result['success'] = false;
             }
+        } else {
+            $result['message'] = "Заполнены не все поля!";
+            $result['success'] = false;
+        }
+        exit(json_encode($result));
+    }
+
+    private function actionCreateEmployee($idRestaurant, $idEmployee, $idPosition) {
+        $result = array();
+        if($idEmployee != null && $idPosition != null) {
+            $this->createEmployee($idRestaurant, $idEmployee, $idPosition);
+            $result['message'] = "Успешно!";
+            $result['success'] = true;
+        } else {
+            $result['message'] = "Заполнены не все поля!";
+            $result['success'] = false;
+        }
+        exit(json_encode($result));
+    }
+
+    private function actionEditEmployee($idRestaurant, $idUser, $idPosition) {
+        $result = array();
+        if($idUser != null && $idPosition != null) {
+            $this->editEmployee($idRestaurant, $idUser, $idPosition);
+            $result['message'] = "Успешно!";
+            $result['success'] = true;
         } else {
             $result['message'] = "Заполнены не все поля!";
             $result['success'] = false;
@@ -215,6 +265,14 @@ class AdministratorModule extends Module
         exit(json_encode($result));
     }
 
+    private function actionDeleteEmployee($idRestaurant, $idEmployee) {
+        $result = array();
+        $this->deleteEmployee($idRestaurant, $idEmployee);
+        $result['message'] = "Успешно!";
+        $result['success'] = true;
+        exit(json_encode($result));
+    }
+
     private function editUser($idUser, $name, $surname, $patronymic, $date_of_birth, $avatar) {
         $user = $this->getUserById($idUser);
         $columns = [
@@ -241,6 +299,20 @@ class AdministratorModule extends Module
             'id' => $idUser
         ];
         $this->delete('users', ['id'], $params);
+    }
+
+    private function deleteEmployee($idRestaurant, $idEmployee) {
+        $params = [
+            'id_restaurant' => $idRestaurant,
+        ];
+        $employees = $this->select('restaurant_employees', ['id_restaurant'], $params);
+        for($i = 0; $i < count($employees); $i++) {
+            $params = [
+                'id' => $employees[$i]['id_user_position'],
+                'id_user' => $idEmployee
+            ];
+            $this->delete('user_position', ['id', 'id_user'], $params, true, false);
+        }
     }
 
     private function getUserById($idUser) {
@@ -286,6 +358,14 @@ class AdministratorModule extends Module
         )[0];
     }
 
+    private function getRestaurantEmployees($id) {
+        return $this->select(
+            'restaurant_employees',
+            ['id_restaurant'],
+            ['id_restaurant' => $id]
+        );
+    }
+
     private function getEmployeesList($idRestaurant) {
         $result = array();
         $employeesList = $this->select(
@@ -321,15 +401,60 @@ class AdministratorModule extends Module
     }
 
 
-    public function getNotRestaurantEmployees($idRestaurant) {
+    private function getNotRestaurantEmployees($idRestaurant) {
         $restaurantEmployees = $this->getEmployeesList($idRestaurant);
-        $columns = ['id'];
-        $params = [];
-        $params['id'] = [];
-        for($i = 0; $i < count($restaurantEmployees); $i++) {
-            $temp['id'.($i + 1)] = $restaurantEmployees[$i]['user']['id'];
-            $params['id'] = $temp;
+        if(!empty($restaurantEmployees)) {
+            $columns = ['id'];
+            $params = [];
+            $params['id'] = [];
+            for($i = 0; $i < count($restaurantEmployees); $i++) {
+                $temp['id'.($i + 1)] = $restaurantEmployees[$i]['user']['id'];
+                $params['id'] = $temp;
+            }
+            return $this->select('users', $columns, $params, false, false);
+        } else {
+            return $this->select('users');
         }
-        return $this->select('users', $columns, $params, false);
+    }
+
+    private function getEmployeesPositionsList() {
+        $result = array();
+        $positonsList = $this->select('module_position');
+        for($i = 0; $i < count($positonsList); $i++) {
+            array_push($result, $this->getPositionById($positonsList[$i]['id_position']));
+        }
+        return $result;
+    }
+
+    private function createEmployee($idRestaurant, $idEmployee, $idPosition) {
+        $params = [
+            'id_user' => $idEmployee,
+            'id_position' => $idPosition
+        ];
+        $idUserPosition = $this->insert('user_position', ['id_user', 'id_position'], $params);
+        $params = [
+            'id_restaurant' => $idRestaurant,
+            'id_user_position' => $idUserPosition,
+            'date' => date("Y-m-d H:i:s")
+        ];
+        $idUserPosition = $this->insert('restaurant_employees', ['id_restaurant', 'id_user_position', 'date'], $params);
+    }
+
+    private function editEmployee($idRestaurant, $idUser, $idPosition) {
+        $restaurantEmployees = $this->getRestaurantEmployees($idRestaurant);
+        for($i = 0; $i < count($restaurantEmployees); $i++) {
+            $params = [
+                'id' => $restaurantEmployees[$i]['id_user_position'],
+                'id_user' => $idUser
+            ];
+            $userPosition = $this->select('user_position', ['id', 'id_user'], $params, true, false);
+            if(!empty($userPosition)) {
+                $params = [
+                    'id_position' => $idPosition
+                ];
+                $this->update('user_position', $userPosition[0]['id'], ['id_position'], $params);
+                break;
+            }
+        }
     }
 }
