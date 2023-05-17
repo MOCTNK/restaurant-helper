@@ -2,7 +2,7 @@
 <div class="panel_container">
     <div class="employee_container">
         <div class="employee_block">
-            <div class="employee_avatar" style="background-image: url(/public/resources/account/<?= $account['avatar']?>);"></div>
+            <img class="employee_avatar" src="/public/resources/account/<?= $account['avatar']?>" onerror="error404(this)">
             <div class="employee_info">
                 <div class="employee_label">
                     <span class="employee_label_title">ФИО: </span>
@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div>
-                    <button id="logout">Выйти из аккаунта</button>
+                    <button style="margin:0; background-color: #f0aaaa;"  id="logout">Выйти из аккаунта</button>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
             <?php foreach ($menuEmployee as $item):?>
                 <a href="/panel/employee/action/<?= $item['id']?>">
                     <div class="menu_employee_card">
-                        <div class="menu_employee_card_icon" style="background-image: url(/application/modules/<?= $item['module_name']?>/resources/action/<?= $item['action'].'.png'?>);"></div>
+                        <img class="menu_employee_card_icon" src="/application/modules/<?= $item['module_name']?>/resources/action/<?= $item['action'].'.png'?>" onerror="error404(this)">
                         <div class="menu_employee_card_label"><?= $item['name']?></div>
                     </div>
                 </a>

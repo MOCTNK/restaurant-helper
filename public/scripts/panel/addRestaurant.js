@@ -1,4 +1,25 @@
 
+function getWindow(action) {
+    let dataClient = {
+        'action': action,
+    };
+    return $.ajax({
+        type: 'post',
+        url: '/panel/admin/restaurants',
+        dataType: 'json',
+        data: dataClient,
+        success: function(result) {
+        },
+        error: function(result) {
+            message("Ошибка запроса! Результат в консоле!");
+            console.log(result);
+        },
+    });
+}
+
+function getWindowFormAddRestaurant() {
+    return getWindow('windowFormAddRestaurant');
+}
 
 function addRestaurant(dataClient) {
     console.log(dataClient);
@@ -22,13 +43,21 @@ function addRestaurant(dataClient) {
     });
 }
 $(document).ready(function() {
-    $('#form_add_restaurant').submit(function(event) {
+    $('#add').click(function (event) {
         event.preventDefault();
-        let dataClient = {
-            'action': "addRestaurant",
-            'form': getDataForm($(this))
-        };
-        dataClient.form.logo = $('.input_file').val();
-        addRestaurant(dataClient);
+        let result = getWindowFormAddRestaurant()
+        result.done(function () {
+            let view = result.responseJSON.view;
+            customWindow(view, 500, 620);
+            $('#form_add_restaurant').submit(function(event) {
+                event.preventDefault();
+                let dataClient = {
+                    'action': "addRestaurant",
+                    'form': getDataForm($(this))
+                };
+                dataClient.form.logo = $('.input_file').val();
+                addRestaurant(dataClient);
+            });
+        });
     });
 });

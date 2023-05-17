@@ -193,4 +193,12 @@ class Panel extends Model
         }
         return $result;
     }
+
+    public function getWindowFormAddRestaurant($view) {
+        $result = array();
+        $result['message'] = "Успешно!";
+        $result['success'] = true;
+        $result['view'] = $view;
+        exit(json_encode($result));
+    }
 }

@@ -92,16 +92,24 @@ class PanelController extends Controller
     }
 
     public function restaurantsAction() {
-        $this->view->path = '/panel/admin/restaurants';
-        $this->adminPanel = $this->view->getView('panel/admin/panel.php',[
-            'action' => $this->route['action_panel']
-        ]);
-        $vars = [
-            'panel' => $this->panel,
-            'adminPanel' => $this->adminPanel,
-            'restaurantsList' =>$this->model->getRestaurantsList()
-        ];
-        $this->view->render('Менеджер ресторанов', $vars);
+        if(!empty($_POST)) {
+            if(isset($_POST['action']) && $_POST['action'] == "windowFormAddRestaurant") {
+                $viewForm = $this->view->getView('panel/admin/restaurants/addRestaurant.php');
+                $this->model->getWindowFormAddRestaurant($viewForm);
+            }
+        } else {
+            $this->view->path = '/panel/admin/restaurants';
+            $this->view->pathAfterBody = '/panel/admin/restaurants/addRestaurant';
+            $this->adminPanel = $this->view->getView('panel/admin/panel.php', [
+                'action' => $this->route['action_panel']
+            ]);
+            $vars = [
+                'panel' => $this->panel,
+                'adminPanel' => $this->adminPanel,
+                'restaurantsList' => $this->model->getRestaurantsList()
+            ];
+            $this->view->render('Менеджер ресторанов', $vars);
+        }
     }
 
     public function addRestaurantAction() {
@@ -211,5 +219,9 @@ class PanelController extends Controller
             ];
             $this->view->render('Менеджер модулей', $vars);
         }
+    }
+
+    private function getWindowFormAddRestaurant() {
+        $this->view->getView('panel/admin/restaurants/addRestaurant.php');
     }
 }
